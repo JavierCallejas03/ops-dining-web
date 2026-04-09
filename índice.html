@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CAPA DE SEGURIDAD: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://bvfaxdlrujgswyicjecn.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
+    
+    <title>Ops Dining | Automatización B2B Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0F172A',
+                        offwhite: '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F8FAFC; color: #0F172A; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .hero-overlay { background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%); }
+        input { background: transparent !important; border-bottom: 1px solid rgba(15, 23, 42, 0.1) !important; transition: border-color 0.3s ease; border-radius: 0; text-align: center; }
+        input:focus { border-bottom-color: #0F172A !important; outline: none; }
+        .hp-field { display: none !important; visibility: hidden !important; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- HEADER CON DISTRIBUCIÓN REPARTIDA (1/3 CADA SECCIÓN) -->
+    <header class="fixed w-full z-50 bg-offwhite/90 backdrop-blur-md border-b border-navy/5">
+        <nav class="max-w-[1440px] mx-auto px-6 md:px-12 h-32 grid grid-cols-2 lg:grid-cols-3 items-center">
+            
+            <!-- COLUMNA IZQUIERDA: LOGO + NOMBRE -->
+            <div class="flex justify-start items-center space-x-6">
+                <img src="https://bvfaxdlrujgswyicjecn.supabase.co/storage/v1/object/sign/Ops%20Dining/IsoLogo_Agencia_Ops_Dining-removebg-preview.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83NmJiNmVmYi02NWEzLTQ1NzgtOGI3MC03ZDdiODVkM2FjMTQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJPcHMgRGluaW5nL0lzb0xvZ29fQWdlbmNpYV9PcHNfRGluaW5nLXJlbW92ZWJnLXByZXZpZXcucG5nIiwiaWF0IjoxNzc1NzI3NTM2LCJleHAiOjQ4OTc3OTE1MzZ9.9PUrAXyRQ5K9x2qur6BicWvN1ztQVCn1cA78FWLpv2Y" 
+                     alt="Ops Dining Logo" class="h-20 md:h-24 w-auto object-contain">
+                <div class="text-2xl font-bold tracking-[0.4em] text-navy uppercase leading-none hidden sm:block">
+                    OPS<span class="font-light opacity-40 italic">DINING</span>
+                </div>
+            </div>
+            
+            <!-- COLUMNA CENTRO: NAVEGACIÓN (Centrado absoluto) -->
+            <div class="hidden lg:flex justify-center items-center space-x-12 text-[11px] font-bold uppercase tracking-[0.3em] text-navy/60">
+                <a href="#soluciones" class="hover:text-navy transition-colors">Soluciones</a>
+                <a href="#confianza" class="hover:text-navy transition-colors">Confianza</a>
+                <a href="#resultados" class="hover:text-navy transition-colors">Resultados</a>
+                <a href="#testimonios" class="hover:text-navy transition-colors">Trayectoria</a>
+            </div>
+
+            <!-- COLUMNA DERECHA: BOTÓN CTA -->
+            <div class="flex justify-end">
+                <a href="#formulario" class="border border-navy px-10 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap">
+                    Agendar Auditoría
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- SECCIÓN 1: HERO -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center px-8 overflow-hidden text-center">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop" alt="Ops Dining" class="w-full h-full object-cover">
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl reveal pt-20">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight tracking-tight mb-8 text-offwhite uppercase">Blindaje de facturación <br>para la alta hostelería.</h1>
+            <p class="text-lg md:text-xl text-offwhite/70 mb-12 max-w-2xl mx-auto leading-relaxed font-light">Automatizamos la gestión de reservas y confirmaciones al 100%, eliminando el error humano y protegiendo tu rentabilidad.</p>
+            <a href="#formulario" class="inline-block bg-offwhite text-navy px-12 py-6 font-bold text-xs uppercase tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500">Solicitar Auditoría</a>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: DOLOR -->
+    <section class="py-32 bg-offwhite text-center">
+        <div class="max-w-6xl mx-auto px-8">
+            <div class="grid md:grid-cols-3 gap-20">
+                <div class="reveal flex flex-col items-center">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Punto de Fuga 01</span>
+                    <h3 class="text-xl font-bold mt-6 mb-4 italic text-navy">No-Shows de fin de semana</h3>
+                    <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto">Mesas vacías en servicios críticos que impactan directamente en el EBITDA anual.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.2s;">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Punto de Fuga 02</span>
+                    <h3 class="text-xl font-bold mt-6 mb-4 italic text-navy">Caos en Hora Punta</h3>
+                    <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto">El equipo de sala pierde el foco en la experiencia del cliente por atender llamadas de reserva.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.4s;">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Punto de Fuga 03</span>
+                    <h3 class="text-xl font-bold mt-6 mb-4 italic text-navy">Reservas Invisibles</h3>
+                    <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto">Clientes potenciales perdidos por falta de respuesta inmediata fuera del horario comercial.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3: SOLUCIÓN -->
+    <section id="soluciones" class="py-32 bg-navy text-offwhite text-center">
+        <div class="max-w-6xl mx-auto px-8">
+            <div class="mb-24 reveal">
+                <h2 class="text-3xl font-bold tracking-tight italic text-offwhite uppercase">Un escudo de 3 capas.</h2>
+                <div class="h-px w-20 bg-offwhite/20 mt-6 mx-auto"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-24">
+                <div class="reveal flex flex-col items-center">
+                    <h5 class="text-lg font-bold mb-6 text-offwhite">Recepcionista Virtual 24/7</h5>
+                    <p class="text-offwhite/50 leading-relaxed text-sm max-w-xs">Captación ininterrumpida de reservas a través de canales digitales sin intervención humana.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.2s;">
+                    <h5 class="text-lg font-bold mb-6 text-offwhite">Guardián de Reservas</h5>
+                    <p class="text-offwhite/50 leading-relaxed text-sm max-w-xs">Protocolo de re-confirmación automático que minimiza el no-show sin fricción para el cliente.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.4s;">
+                    <h5 class="text-lg font-bold mb-6 text-offwhite">Escudo Telefónico</h5>
+                    <p class="text-offwhite/50 leading-relaxed text-sm max-w-xs">Atención telefónica fluida en picos de trabajo para asegurar que ninguna mesa quede sin registrar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4: RESULTADOS -->
+    <section id="resultados" class="py-32 bg-offwhite">
+        <div class="max-w-5xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between border-y border-navy/10 py-16 gap-12 text-navy text-center">
+                <div class="flex-1 reveal">
+                    <div class="text-5xl md:text-6xl font-extralight tracking-tighter mb-4">-60%</div>
+                    <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40">No-shows eliminados</div>
+                </div>
+                <div class="hidden md:block w-px bg-navy/10 h-24 my-auto"></div>
+                <div class="flex-1 reveal" style="transition-delay: 0.2s;">
+                    <div class="text-5xl md:text-6xl font-extralight tracking-tighter mb-4">+20%</div>
+                    <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40">Facturación optimizada</div>
+                </div>
+                <div class="hidden md:block w-px bg-navy/10 h-24 my-auto"></div>
+                <div class="flex-1 reveal" style="transition-delay: 0.4s;">
+                    <div class="text-5xl md:text-6xl font-extralight tracking-tighter mb-4">15H</div>
+                    <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40">Tiempo recuperado / sem</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 5: CONFIANZA -->
+    <section id="confianza" class="py-32 bg-white text-center flex flex-col items-center">
+        <div class="max-w-6xl mx-auto px-8">
+            <div class="mb-24 reveal">
+                <h2 class="text-2xl font-bold tracking-[0.3em] uppercase text-navy">Por qué confiar en Ops Dining</h2>
+                <div class="h-px w-12 bg-navy/10 mt-6 mx-auto"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-16">
+                <div class="reveal flex flex-col items-center">
+                    <div class="mb-8 opacity-20"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4">Especialización Horeca</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs font-medium">Entendemos el lenguaje, los tiempos y la presión real de un servicio de alta gama.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.2s;">
+                    <div class="mb-8 opacity-20"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4">Tecnología no invasiva</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs font-medium">Nuestros sistemas se integran silenciosamente sin que el cliente note la automatización.</p>
+                </div>
+                <div class="reveal flex flex-col items-center" style="transition-delay: 0.4s;">
+                    <div class="mb-8 opacity-20"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4">Compromiso con el ROI</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs font-medium">Cada implementación tiene un objetivo: proteger y aumentar tu margen neto de beneficio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 6: TESTIMONIOS -->
+    <section id="testimonios" class="py-32 bg-offwhite text-center">
+        <div class="max-w-6xl mx-auto px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-2xl font-bold tracking-[0.2em] uppercase text-navy">Trayectoria</h2>
+                <p class="text-navy/40 text-xs mt-4 font-medium italic">Casos de éxito en la industria.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-16">
+                <div class="reveal flex flex-col items-center px-10">
+                    <p class="text-lg italic text-navy/70 mb-8 leading-relaxed font-light">"Recuperamos la inversión el primer mes eliminando los no-shows. La tecnología es impecable."</p>
+                    <div class="h-px w-8 bg-navy/10 mb-6"></div>
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-navy opacity-60">— Director de Operaciones, Grupo Gastronómico</p>
+                </div>
+                <div class="reveal flex flex-col items-center px-10" style="transition-delay: 0.2s;">
+                    <p class="text-lg italic text-navy/70 mb-8 leading-relaxed font-light">"15 horas semanales devueltas a mi equipo. Ahora pueden centrarse en la hospitalidad real."</p>
+                    <div class="h-px w-8 bg-navy/10 mb-6"></div>
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-navy opacity-60">— Propietaria, Restaurante Alta Cocina</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 7: FORMULARIO -->
+    <section id="formulario" class="py-32 bg-white px-8 text-center flex flex-col items-center">
+        <div class="max-w-2xl mx-auto reveal">
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold tracking-tight mb-4 uppercase text-navy">Solicitar Auditoría</h2>
+                <p class="text-navy/50 text-xs italic font-medium">Análisis de viabilidad por el equipo de Ops Dining.</p>
+            </div>
+            <div id="form-status" class="mb-8 text-xs font-bold uppercase tracking-widest hidden p-4 border border-navy"></div>
+            <form id="secure-form" class="space-y-12">
+                <div class="hp-field"><input type="text" name="b_nickname" value="" tabindex="-1"></div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="flex flex-col items-center"><label class="text-[9px] uppercase font-bold tracking-widest mb-2 opacity-40">Nombre</label><input type="text" id="name" required class="w-full py-2 text-sm font-medium"></div>
+                    <div class="flex flex-col items-center"><label class="text-[9px] uppercase font-bold tracking-widest mb-2 opacity-40">Restaurante</label><input type="text" id="restaurant" required class="w-full py-2 text-sm font-medium"></div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="flex flex-col items-center"><label class="text-[9px] uppercase font-bold tracking-widest mb-2 opacity-40">Email</label><input type="email" id="email" required class="w-full py-2 text-sm font-medium"></div>
+                    <div class="flex flex-col items-center"><label class="text-[9px] uppercase font-bold tracking-widest mb-2 opacity-40">Teléfono</label><input type="tel" id="phone" required class="w-full py-2 text-sm font-medium"></div>
+                </div>
+                <div class="pt-8">
+                    <button type="submit" id="submit-btn" class="w-full bg-navy text-offwhite py-6 font-bold uppercase tracking-[0.3em] text-[11px] hover:bg-opacity-90 transition-all">Enviar Solicitud</button>
+                    <p class="mt-4 text-[8px] opacity-30 uppercase tracking-widest">Protección anti-spam activa</p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy py-16 text-offwhite/40 px-8">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+            <div class="flex items-center space-x-6 justify-center md:justify-start">
+                <img src="https://bvfaxdlrujgswyicjecn.supabase.co/storage/v1/object/sign/Ops%20Dining/IsoLogo_Agencia_Ops_Dining-removebg-preview.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83NmJiNmVmYi02NWEzLTQ1NzgtOGI3MC03ZDdiODVkM2FjMTQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJPcHMgRGluaW5nL0lzb0xvZ29fQWdlbmNpYV9PcHNfRGluaW5nLXJlbW92ZWJnLXByZXZpZXcucG5nIiwiaWF0IjoxNzc1NzI3NTM2LCJleHAiOjQ4OTc3OTE1MzZ9.9PUrAXyRQ5K9x2qur6BicWvN1ztQVCn1cA78FWLpv2Y" 
+                     alt="Ops Dining Logo" class="h-16 w-auto grayscale brightness-200 opacity-50">
+                <div class="text-offwhite text-lg font-bold tracking-[0.4em] uppercase leading-none">
+                    OPS<span class="opacity-30 italic font-light">DINING</span>
+                </div>
+            </div>
+            <div class="text-[9px] uppercase tracking-[0.4em] opacity-40">© 2024 Ops Dining. Todos los derechos reservados.</div>
+        </div>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.addEventListener("load", reveal);
+
+        const form = document.getElementById('secure-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const statusMsg = document.getElementById('form-status');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const honeypot = document.querySelector('input[name="b_nickname"]').value;
+            if (honeypot !== "") return;
+
+            const lastSubmit = localStorage.getItem('last_submit_time');
+            const now = new Date().getTime();
+            if (lastSubmit && (now - lastSubmit < 3600000)) {
+                statusMsg.innerText = "Límite alcanzado. Inténtelo en 1 hora.";
+                statusMsg.classList.remove('hidden');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Procesando...";
+            setTimeout(() => {
+                localStorage.setItem('last_submit_time', now);
+                statusMsg.innerText = "Solicitud enviada. Contactaremos pronto.";
+                statusMsg.classList.remove('hidden');
+                form.reset();
+                submitBtn.innerText = "Enviado";
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
