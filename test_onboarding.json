@@ -1,0 +1,20 @@
+{
+  "nombre_comercial": "Casa Pepe Onboarding",
+  "razon_social": "Pepe Rest S.L.",
+  "cif": "B87654321",
+  "whatsapp_empresa": "600111222",
+  "direccion": "Av. Gastronomía 45, Madrid",
+  "software_reservas": "CoverManager",
+  "api_key_reservas": "sk_test_51Mz...",
+  "whatsapp_token": "EAAQ...",
+  "whatsapp_phone_id": "1055...",
+  "google_sheet_id": "1FVEvCj2ZkRLM2q843CoOlaPhCmZ1JFZEpLsIOiq8ZEc",
+  "google_service_email": "ops-dining@gserviceaccount.com",
+  "horarios": "M-D: 13:00-16:00 y 20:00-23:30",
+  "url_menu": "https://opsdining.com/menu.pdf",
+  "faq_clientes": "¿Hay terraza?, ¿Menú celiacos?, ¿Parking?",
+  "reglas_cancelacion": "Anulación gratuita hasta 4h antes",
+  "tono_asistente": "tu",
+  "nombre_asistente": "Sofía",
+  "frase_cierre": "¡Esperamos verte pronto!"
+}

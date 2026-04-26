@@ -39,25 +39,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Scroll to top of form
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function validateStep() {
         const activeStep = document.querySelector('.step-content.active');
-        const inputs = activeStep.querySelectorAll('input[required], select[required], textarea[required]');
+        const inputs = activeStep.querySelectorAll('input, select, textarea');
         let isValid = true;
 
         inputs.forEach(input => {
-            if (!input.value.trim()) {
-                input.style.borderColor = '#ff4444';
-                isValid = false;
-            } else {
-                input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            // Eliminar errores previos
+            input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            const existingError = input.parentNode.querySelector('.error-msg');
+            if (existingError) existingError.remove();
+
+            // Solo validar si es requerido o tiene valor
+            if (input.hasAttribute('required') || input.value.trim() !== '') {
+                if (!input.checkValidity()) {
+                    isValid = false;
+                    input.style.borderColor = '#ff4444';
+                    
+                    // Crear mensaje de error
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-msg text-[#ff4444] text-[10px] mt-1 italic animate-fade-in';
+                    errorMsg.innerText = input.title || 'Este campo es obligatorio o tiene un formato incorrecto';
+                    input.parentNode.appendChild(errorMsg);
+                }
             }
         });
 
         if (!isValid) {
-            alert('Por favor, rellena todos los campos obligatorios (*) para continuar.');
+            // Hacer scroll al primer error
+            const firstError = activeStep.querySelector('.error-msg');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         return isValid;
@@ -80,8 +94,11 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        if (!validateStep()) return;
+
         // Show loading state on button
         submitBtn.disabled = true;
+        const originalText = submitBtn.innerText;
         submitBtn.innerText = 'Enviando Dossier...';
 
         const formData = new FormData(form);
@@ -101,7 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                // Mostrar éxito con overlay y bloquear scroll
                 successMessage.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
                 window.scrollTo(0, 0);
             } else {
                 throw new Error('Error en el servidor');
@@ -110,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
             alert('Hubo un problema al enviar el dossier. Por favor, inténtalo de nuevo.');
             submitBtn.disabled = false;
-            submitBtn.innerText = 'Finalizar y Enviar';
+            submitBtn.innerText = originalText;
         }
     });
 });

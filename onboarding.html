@@ -105,7 +105,8 @@
                             pattern="[0-9]{9}" 
                             maxlength="9"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                            placeholder="600 000 000">
+                            placeholder="600 000 000"
+                            title="Introduce exactamente 9 números (ej: 600111222)">
                     </div>
                 </div>
                 <div>
@@ -173,7 +174,7 @@
                 </div>
                 <div>
                     <label>Enlace a vuestra Carta / Menú actual *</label>
-                    <input type="url" name="url_menu" required placeholder="https://tuweb.com/carta.pdf">
+                    <input type="url" name="url_menu" required placeholder="https://tuweb.com/carta.pdf" title="Debes incluir una URL válida (con http:// o https://)">
                 </div>
                 <div>
                     <label>Top 3 preguntas frecuentes de clientes *</label>
@@ -236,14 +237,16 @@
 
     </form>
 
-    <!-- Success Message (Hidden) -->
-    <div id="success-message" class="hidden fixed inset-0 z-50 bg-navy flex flex-col items-center justify-center p-6 text-center">
-        <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-6 animate-bounce">
-            <svg class="w-10 h-10 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+    <!-- Success Message (Full Screen Overlay) -->
+    <div id="success-message" class="hidden fixed inset-0 z-[9999] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center">
+        <div class="max-w-md animate-fade-in">
+            <div class="w-24 h-24 bg-gold rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(197,160,89,0.4)]">
+                <svg class="w-12 h-12 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-5xl font-bold mb-6 text-white">¡Despegue Iniciado!</h2>
+            <p class="text-white/70 text-lg mb-10 leading-relaxed">Hemos recibido el dossier técnico de tu restaurante. Nuestro equipo de ingenieros empezará a entrenar a tu asistente ahora mismo.</p>
+            <a href="index.html" class="inline-block bg-gold text-navy px-12 py-4 rounded-2xl font-black uppercase tracking-widest hover:scale-110 transition-transform shadow-xl">Volver al inicio</a>
         </div>
-        <h2 class="text-4xl font-bold mb-4">¡Despegue Iniciado!</h2>
-        <p class="text-white/60 max-w-md mx-auto mb-8">Hemos recibido el dossier técnico de tu restaurante. Nuestro equipo de ingenieros empezará a entrenar a tu asistente ahora mismo.</p>
-        <a href="index.html" class="text-gold border-b border-gold pb-1 hover:text-white hover:border-white transition-all uppercase tracking-widest text-xs font-bold">Volver al inicio</a>
     </div>
 
     <p class="text-[10px] text-white/20 tracking-widest uppercase mb-4">Capa de Seguridad Ops Dining Activa</p>

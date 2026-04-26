@@ -1,0 +1,20 @@
+{
+  "nombre_comercial": "La Parrilla de Juan",
+  "razon_social": "Juan Carnes S.A.",
+  "cif": "A11223344",
+  "whatsapp_empresa": "699888777",
+  "direccion": "Plaza Mayor 5, Barcelona",
+  "software_reservas": "TheFork",
+  "api_key_reservas": "tf_987654",
+  "whatsapp_token": "TOKEN_WHATSAPP_LIVE",
+  "whatsapp_phone_id": "WH_ID_55",
+  "google_sheet_id": "1FVEvCj2ZkRLM2q843CoOlaPhCmZ1JFZEpLsIOiq8ZEc",
+  "google_service_email": "admin@restaurante.com",
+  "horarios": "L-S: 12:00-00:00",
+  "url_menu": "https://laparrilla.com/carta",
+  "faq_clientes": "Vinos, Postres, Terraza",
+  "reglas_cancelacion": "12h antes",
+  "tono_asistente": "usted",
+  "nombre_asistente": "Juan Bot",
+  "frase_cierre": "Gracias por su visita"
+}
