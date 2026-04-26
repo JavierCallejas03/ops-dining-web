@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier de Despegue Operativo | Ops Dining</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a0a12;
+            --gold: #c5a059;
+            --offwhite: #f5f5f7;
+        }
+        body {
+            background-color: var(--navy);
+            color: var(--offwhite);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        input, select, textarea {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            padding: 1rem !important;
+            border-radius: 0.5rem !important;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--gold) !important; background: rgba(255, 255, 255, 0.08) !important; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.1); transition: all 0.5s; }
+        .progress-fill { height: 100%; background: var(--gold); transition: width 0.5s ease-in-out; }
+        
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar { width: 5px; }
+        textarea::-webkit-scrollbar-track { background: transparent; }
+        textarea::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-12 px-4">
+
+    <!-- Header / Logo -->
+    <a href="index.html" class="mb-12 text-center group transition-all">
+        <h1 class="text-3xl font-bold tracking-widest uppercase mb-2 group-hover:text-gold transition-colors">Ops Dining</h1>
+        <p class="text-gold uppercase tracking-[0.3em] text-[10px]">Dossier de Despegue Operativo</p>
+    </a>
+
+    <!-- Progress Tracker -->
+    <div class="w-full max-w-2xl mb-8">
+        <div class="flex justify-between mb-4 text-[10px] uppercase tracking-widest text-white/40">
+            <span id="step-label">Paso 1 de 4</span>
+            <span id="step-percentage">25%</span>
+        </div>
+        <div class="progress-bar rounded-full overflow-hidden">
+            <div id="progress-fill" class="progress-fill" style="width: 25%;"></div>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <form id="onboarding-form" class="w-full max-w-2xl glass-card rounded-3xl p-8 md:p-12 mb-12 shadow-2xl relative overflow-hidden">
+        
+        <!-- Background decorative glow -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-gold/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+
+        <!-- STEP 1: Datos Empresa -->
+        <div class="step-content active" data-step="1">
+            <h2 class="text-3xl font-bold mb-2">Datos de la Empresa</h2>
+            <p class="text-white/40 text-sm mb-8">Información legal y operativa del restaurante.</p>
+            <div class="space-y-6">
+                <div>
+                    <label>Nombre Comercial del Restaurante *</label>
+                    <input type="text" name="nombre_comercial" required placeholder="Ej: Restaurante El Faro">
+                </div>
+                <div>
+                    <label>Razón Social (Nombre legal) *</label>
+                    <input type="text" name="razon_social" required placeholder="Ej: Hostelería Faro SL">
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label>CIF / NIF *</label>
+                        <input type="text" name="cif" required placeholder="B12345678">
+                    </div>
+                    <div>
+                        <label>WhatsApp del Negocio *</label>
+                        <input type="tel" name="whatsapp_empresa" required placeholder="600 000 000">
+                    </div>
+                </div>
+                <div>
+                    <label>Dirección física completa *</label>
+                    <input type="text" name="direccion" required placeholder="Calle, Número, Ciudad, CP">
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Sistema Reservas -->
+        <div class="step-content" data-step="2">
+            <h2 class="text-3xl font-bold mb-2">Conexión Técnica</h2>
+            <p class="text-white/40 text-sm mb-8">Necesitamos vincularnos con tu sistema de reservas.</p>
+            <div class="space-y-6">
+                <div>
+                    <label>Software de Reservas Actual *</label>
+                    <select name="software_reservas" required class="appearance-none">
+                        <option value="">Selecciona una opción...</option>
+                        <option value="covermanager">CoverManager</option>
+                        <option value="thefork">TheFork</option>
+                        <option value="sevenrooms">SevenRooms</option>
+                        <option value="otro">Otro / Ninguno</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Clave API del Software</label>
+                    <input type="password" name="api_key_reservas" placeholder="Pégala aquí o escribe 'Pendiente'">
+                    <div class="mt-4 p-4 bg-white/5 rounded-lg border border-white/5">
+                        <p class="text-[11px] text-white/50 leading-relaxed italic">
+                            💡 La API permite que tu asistente de IA consulte la disponibilidad real de tus mesas y confirme reservas sin que tú muevas un dedo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Reglas de Negocio -->
+        <div class="step-content" data-step="3">
+            <h2 class="text-3xl font-bold mb-2">Reglas del Negocio</h2>
+            <p class="text-white/40 text-sm mb-8">Define cómo quieres que funcione la inteligencia.</p>
+            <div class="space-y-6">
+                <div>
+                    <label>Horario de apertura al público *</label>
+                    <input type="text" name="horarios" required placeholder="Ej: Mar-Dom 13:00-16:00 y 20:30-23:30">
+                </div>
+                <div>
+                    <label>Enlace a vuestra Carta / Menú actual *</label>
+                    <input type="url" name="url_menu" required placeholder="https://tuweb.com/carta.pdf">
+                </div>
+                <div>
+                    <label>Top 3 preguntas frecuentes de clientes *</label>
+                    <textarea name="faq_clientes" rows="3" placeholder="Ej: ¿Tenéis opciones sin gluten?, ¿Se puede aparcar cerca?, ¿Admitís perros?"></textarea>
+                </div>
+                <div>
+                    <label>Política de Cancelación y No-Shows</label>
+                    <textarea name="reglas_cancelacion" rows="3" placeholder="Ej: Cobramos 15€ si no se cancela con 12h de antelación."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: Personalidad Asistente -->
+        <div class="step-content" data-step="4">
+            <h2 class="text-3xl font-bold mb-2">ADN del Asistente</h2>
+            <p class="text-white/40 text-sm mb-8">Dale alma a tu nueva inteligencia artificial.</p>
+            <div class="space-y-6">
+                <div>
+                    <label>Tono de comunicación preferido *</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="tono_asistente" value="tu" class="hidden peer" checked>
+                            <div class="p-4 border border-white/10 rounded-xl peer-checked:border-gold peer-checked:bg-gold/10 text-center transition-all">
+                                Cercano (De tú)
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="tono_asistente" value="usted" class="hidden peer">
+                            <div class="p-4 border border-white/10 rounded-xl peer-checked:border-gold peer-checked:bg-gold/10 text-center transition-all">
+                                Formal (De usted)
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label>Nombre del Asistente *</label>
+                    <input type="text" name="nombre_asistente" required placeholder="Ej: Maitre Virtual, Alex, Sofía...">
+                </div>
+                <div>
+                    <label>Frase de cierre distintiva de la marca</label>
+                    <input type="text" name="frase_cierre" placeholder="Ej: ¡Buen provecho!, ¡Te esperamos!">
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-white/10">
+            <button type="button" id="prev-btn" class="text-white/40 hover:text-white transition-all text-sm font-semibold invisible">
+                ← Volver
+            </button>
+            <div class="flex gap-4">
+                <button type="button" id="next-btn" class="bg-gold text-navy px-10 py-4 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all">
+                    Siguiente Paso
+                </button>
+                <button type="submit" id="submit-btn" class="hidden bg-white text-navy px-12 py-4 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all">
+                    Finalizar y Enviar
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <!-- Success Message (Hidden) -->
+    <div id="success-message" class="hidden fixed inset-0 z-50 bg-navy flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-6 animate-bounce">
+            <svg class="w-10 h-10 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <h2 class="text-4xl font-bold mb-4">¡Despegue Iniciado!</h2>
+        <p class="text-white/60 max-w-md mx-auto mb-8">Hemos recibido el dossier técnico de tu restaurante. Nuestro equipo de ingenieros empezará a entrenar a tu asistente ahora mismo.</p>
+        <a href="index.html" class="text-gold border-b border-gold pb-1 hover:text-white hover:border-white transition-all uppercase tracking-widest text-xs font-bold">Volver al inicio</a>
+    </div>
+
+    <p class="text-[10px] text-white/20 tracking-widest uppercase mb-4">Capa de Seguridad Ops Dining Activa</p>
+
+    <script src="assets/js/onboarding-handler.js"></script>
+    <script src="assets/js/security.js"></script>
+</body>
+</html>
