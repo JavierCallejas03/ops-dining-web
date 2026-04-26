@@ -48,10 +48,16 @@
         .progress-bar { height: 4px; background: rgba(255,255,255,0.1); transition: all 0.5s; }
         .progress-fill { height: 100%; background: var(--gold); transition: width 0.5s ease-in-out; }
         
-        /* Estilo para el botón de finalizar */
-        #submit-btn {
-            background-color: white !important;
-            color: #0a0a12 !important;
+        /* Estilos para selectores de Tono */
+        .radio-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        input[type="radio"]:checked + .radio-card {
+            border-color: var(--gold) !important;
+            background: rgba(197, 160, 89, 0.15) !important;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+            color: var(--gold);
         }
     </style>
 </head>
@@ -195,15 +201,15 @@
                 <div>
                     <label>Tono de comunicación preferido *</label>
                     <div class="grid grid-cols-2 gap-4">
-                        <label class="cursor-pointer">
-                            <input type="radio" name="tono_asistente" value="tu" class="hidden peer" checked>
-                            <div class="p-4 border border-white/10 rounded-xl peer-checked:border-gold peer-checked:bg-gold/10 text-center transition-all">
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="tono_asistente" value="tu" class="hidden" checked>
+                            <div class="radio-card p-4 rounded-xl text-center">
                                 Cercano (De tú)
                             </div>
                         </label>
-                        <label class="cursor-pointer">
-                            <input type="radio" name="tono_asistente" value="usted" class="hidden peer">
-                            <div class="p-4 border border-white/10 rounded-xl peer-checked:border-gold peer-checked:bg-gold/10 text-center transition-all">
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="tono_asistente" value="usted" class="hidden">
+                            <div class="radio-card p-4 rounded-xl text-center">
                                 Formal (De usted)
                             </div>
                         </label>
@@ -251,7 +257,7 @@
 
     <p class="text-[10px] text-white/20 tracking-widest uppercase mb-4">Capa de Seguridad Ops Dining Activa</p>
 
-    <script src="assets/js/onboarding-handler.js"></script>
+    <script src="assets/js/onboarding-handler.js?v=3"></script>
     <script src="assets/js/security.js"></script>
 </body>
 </html>
