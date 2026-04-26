@@ -132,17 +132,32 @@
                 </div>
                 <div>
                     <label>Clave API del Software de Reservas</label>
-                    <input type="password" name="api_key_reservas" placeholder="Pégala aquí o escribe 'Pendiente'">
+                    <input type="password" name="api_key_reservas" placeholder="Pégala aquí...">
+                    <p class="text-[10px] text-white/30 mt-2 italic">📌 Solicítala al soporte de tu proveedor (CoverManager, TheFork, etc.).</p>
                 </div>
                 
                 <div class="pt-4 border-t border-white/10">
                     <label>WhatsApp Cloud API: Access Token</label>
                     <input type="password" name="whatsapp_token" placeholder="EAAB...">
+                    <p class="text-[10px] text-white/30 mt-2 italic">📌 Se obtiene en el panel de 'Meta for Developers'.</p>
                 </div>
                 
                 <div>
                     <label>WhatsApp Cloud API: Phone Number ID</label>
                     <input type="text" name="whatsapp_phone_id" placeholder="109823...">
+                    <p class="text-[10px] text-white/30 mt-2 italic">📌 Lo encontrarás en la configuración de WhatsApp dentro de Meta.</p>
+                </div>
+
+                <div class="pt-4 border-t border-white/10">
+                    <label>Google Sheets: ID del Documento (Excel)</label>
+                    <input type="text" name="google_sheet_id" placeholder="1uUz...">
+                    <p class="text-[10px] text-white/30 mt-2 italic">📌 Es el código largo que aparece en la URL de tu navegador al abrir el Excel.</p>
+                </div>
+                
+                <div>
+                    <label>Google Service Account Email</label>
+                    <input type="email" name="google_service_email" placeholder="cliente-n8n@proyecto.iam.gserviceaccount.com">
+                    <p class="text-[10px] text-white/30 mt-2 italic">📌 Se genera en Google Cloud Console. Debes compartir tu Excel con este email.</p>
                 </div>
             </div>
         </div>
