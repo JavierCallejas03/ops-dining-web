@@ -1,0 +1,39 @@
+# ============================================
+# OPS DINING — Headers de Seguridad (Apache)
+# ============================================
+
+# Anti-Clickjacking
+Header always set X-Frame-Options "DENY"
+
+# Anti-MIME Sniffing
+Header always set X-Content-Type-Options "nosniff"
+
+# XSS Protection
+Header always set X-XSS-Protection "1; mode=block"
+
+# Referrer Policy
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissions Policy
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+# HSTS (solo activar si tienes SSL)
+# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+# Cache Control para assets estáticos
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Bloquear acceso a archivos sensibles
+<FilesMatch "(^\.htaccess|\.git|\.env)">
+    Require all denied
+</FilesMatch>
+
+# Desactivar listado de directorios
+Options -Indexes
+
+# Forzar HTTPS (descomentar si tienes SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

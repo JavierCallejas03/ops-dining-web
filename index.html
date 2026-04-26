@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO -->
+    <title>Ops Dining | Automatización B2B Premium</title>
+    <meta name="description" content="Blindaje de facturación para la alta hostelería. Automatizamos la gestión de reservas y confirmaciones al 100%, eliminando el error humano.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://opsdining.com/">
+    <link rel="icon" href="./favicon.png" type="image/png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ops Dining | Automatización B2B Premium">
+    <meta property="og:description" content="Blindaje de facturación para la alta hostelería. Automatizamos la gestión de reservas al 100%.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://opsdining.com/">
+    <meta property="og:image" content="./assets/images/logo.png">
+
+    <!-- SEGURIDAD -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com mailto: tel:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://*.n8n.cloud https://*.app.n8n.cloud;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Ops Dining",
+        "description": "Automatización B2B Premium para hostelería",
+        "telephone": "+34665644737",
+        "email": "info.opsdining@gmail.com",
+        "url": "https://opsdining.com"
+    }
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { navy: '#0F172A', offwhite: '#F8FAFC' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body class="antialiased font-sans">
+
+    <!-- HEADER SMART -->
+    <header id="main-header" class="fixed w-full z-50 bg-offwhite/95 backdrop-blur-md border-b border-navy/5">
+        <nav class="max-w-[1440px] mx-auto px-4 md:px-10 h-24 grid grid-cols-2 lg:grid-cols-3 items-center">
+            <div class="flex justify-start items-center space-x-3 md:space-x-4">
+                <img src="./assets/images/logo.png" alt="Ops Dining" class="h-10 md:h-16 w-auto object-contain shrink-0">
+                <div class="text-[11px] sm:text-sm md:text-2xl font-bold tracking-[0.3em] uppercase leading-none text-navy">OPS DINING</div>
+            </div>
+            <div class="hidden lg:flex justify-center items-center space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] text-navy/60">
+                <a href="#soluciones" class="hover:text-navy transition-colors">Soluciones</a>
+                <a href="#confianza" class="hover:text-navy transition-colors">Confianza</a>
+                <a href="#resultados" class="hover:text-navy transition-colors">Resultados</a>
+            </div>
+            <div class="flex justify-end">
+                <a href="#formulario" class="border border-navy px-4 md:px-8 py-2 md:py-2.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap">Agendar Auditoría</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center px-8 overflow-hidden text-offwhite uppercase">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop" alt="Fine Dining" class="w-full h-full object-cover">
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <div class="relative z-10 max-w-5xl reveal pt-20">
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6 text-center">Convierte Cada Silla Vacía y Llamada Perdida en Facturación Blindada.</h1>
+            <p class="text-base md:text-xl text-offwhite/70 mb-10 max-w-2xl mx-auto leading-relaxed font-light italic normal-case text-center">Automatizamos la gestión de reservas al 100% sin dar más trabajo a tu equipo de sala.</p>
+            <a href="#formulario" class="inline-block bg-offwhite text-navy px-12 py-5 font-bold text-xs tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500">Solicitar Auditoría</a>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DOLOR -->
+    <section class="py-24 bg-offwhite flex justify-center text-navy text-center">
+        <div class="max-w-6xl mx-auto px-8 grid md:grid-cols-3 gap-12">
+            <div class="reveal flex flex-col items-center">
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30 mb-6 text-center text-navy">Punto de Fuga 01</span>
+                <h3 class="text-xl font-bold mb-4 italic text-center">No Shows de Fin de Semana</h3>
+                <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto text-center">Mesas vacías el sábado que arruinan tu caja y tu planificación de personal.</p>
+            </div>
+            <div class="reveal flex flex-col items-center text-center" style="transition-delay: 0.1s;">
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30 mb-6 text-center text-navy">Punto de Fuga 02</span>
+                <h3 class="text-xl font-bold mb-4 italic text-center">Caos en Hora Punta</h3>
+                <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto text-center">El teléfono sonando sin parar mientras tus camareros no dan abasto con la sala.</p>
+            </div>
+            <div class="reveal flex flex-col items-center text-center" style="transition-delay: 0.2s;">
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-30 mb-6 text-center text-navy">Punto de Fuga 03</span>
+                <h3 class="text-xl font-bold mb-4 italic text-center">Reservas Invisibles</h3>
+                <p class="text-navy/50 leading-relaxed text-sm font-medium max-w-xs mx-auto text-center">Mensajes de Instagram o WhatsApp ignorados porque el local está cerrado.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUCIONES -->
+    <section id="soluciones" class="py-24 bg-navy text-offwhite flex flex-col items-center">
+        <div class="max-w-6xl mx-auto px-8 text-center">
+            <h2 class="text-3xl font-bold italic uppercase reveal mb-20">Un escudo de 3 capas.</h2>
+            <div class="grid md:grid-cols-3 gap-16 text-center">
+                <div class="reveal flex flex-col items-center text-center">
+                    <h5 class="text-lg font-bold mb-6 italic text-center">Recepcionista Virtual 24/7</h5>
+                    <p class="text-offwhite/50 text-sm max-w-xs mx-auto text-center">Capta clientes mientras duermes. Asegura reservas web y redes sociales fuera del horario comercial.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center" style="transition-delay: 0.1s;">
+                    <h5 class="text-lg font-bold mb-6 italic text-center">Guardián de Reservas</h5>
+                    <p class="text-offwhite/50 text-sm max-w-xs mx-auto text-center">Confirma y blinda cada mesa. Elimina inasistencias persiguiendo educadamente al cliente por ti.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center" style="transition-delay: 0.2s;">
+                    <h5 class="text-lg font-bold mb-6 italic text-center">Escudo Telefónico</h5>
+                    <p class="text-offwhite/50 text-sm max-w-xs mx-auto text-center">Atención de voz premium en hora punta. Atendemos todas las llamadas automáticamente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTADOS ROI -->
+    <section id="resultados" class="py-20 bg-offwhite flex flex-col items-center text-navy text-center">
+        <div class="max-w-5xl mx-auto px-8 w-full border-y border-navy/10 py-16 flex flex-col md:flex-row justify-between items-center gap-12">
+            <div class="flex-1 reveal flex flex-col items-center">
+                <div class="text-6xl font-extralight text-navy mb-2">-60%</div>
+                <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40 text-center">Reducción en inasistencias</div>
+            </div>
+            <div class="hidden md:block w-px bg-navy/10 h-16"></div>
+            <div class="flex-1 reveal flex flex-col items-center">
+                <div class="text-6xl font-extralight text-navy mb-2">+20%</div>
+                <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40 text-center">Aumento en mesas rescatadas</div>
+            </div>
+            <div class="hidden md:block w-px bg-navy/10 h-16"></div>
+            <div class="flex-1 reveal flex flex-col items-center">
+                <div class="text-6xl font-extralight text-navy mb-2">15H</div>
+                <div class="text-[9px] font-bold uppercase tracking-[0.4em] opacity-40 text-center">Horas devueltas al equipo</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONFIANZA -->
+    <section id="confianza" class="py-24 bg-white flex flex-col items-center border-b border-navy/5 text-navy text-center">
+        <div class="max-w-6xl mx-auto px-8">
+            <h2 class="text-2xl font-bold tracking-[0.3em] uppercase mb-20 reveal">POR QUÉ CONFIAR EN OPS DINING</h2>
+            <div class="grid md:grid-cols-3 gap-16 text-center">
+                <div class="reveal flex flex-col items-center text-center text-navy">
+                    <div class="mb-6 opacity-20 text-center text-navy"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mx-auto"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4">Especialización Horeca</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs mx-auto text-center">Entendemos el lenguaje, los tiempos y la presión real de un servicio de alta gama.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center" style="transition-delay: 0.1s;">
+                    <div class="mb-6 opacity-20 text-navy text-center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mx-auto"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4">Tecnología Invisible</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs mx-auto text-center text-navy">Nuestros sistemas se integran silenciosamente sin que el cliente note la automatización.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center text-navy" style="transition-delay: 0.2s;">
+                    <div class="mb-6 opacity-20 text-navy text-center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mx-auto"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest mb-4 text-navy">Enfoque ROI</h4>
+                    <p class="text-navy/50 text-xs leading-relaxed max-w-xs mx-auto text-center">Cada implementación tiene un objetivo: proteger y aumentar tu margen neto de beneficio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULARIO -->
+    <section id="formulario" class="py-24 bg-white flex flex-col items-center text-center">
+        <div class="max-w-2xl mx-auto reveal text-navy px-6">
+            <h2 class="text-3xl font-bold uppercase mb-4 text-center">SOLICITAR AUDITORÍA</h2>
+            <p class="text-navy/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-16 italic text-center">Análisis estratégico por el equipo de OPS DINING</p>
+            
+            <form id="secure-form" method="POST" class="space-y-12">
+                <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <div class="grid md:grid-cols-2 gap-12 text-center text-navy">
+                    <input type="text" name="nombre" required placeholder="Nombre de contacto" class="input-line" autocomplete="name">
+                    <input type="text" name="restaurante" required placeholder="Nombre del restaurante" class="input-line" autocomplete="organization">
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 text-center text-navy">
+                    <input type="email" name="email" required placeholder="Email Corporativo" class="input-line" autocomplete="email">
+                    <input type="tel" name="telefono" required placeholder="Teléfono Directo" class="input-line" autocomplete="tel">
+                </div>
+                <div class="pt-10 text-center">
+                    <button type="submit" id="submit-btn" class="w-full bg-navy text-offwhite py-6 font-bold uppercase tracking-[0.4em] text-[11px] hover:bg-opacity-90 transition-all duration-500">
+                        Enviar Solicitud
+                    </button>
+                    <p class="mt-6 text-[8px] opacity-20 uppercase tracking-[0.3em] text-center text-navy">Capa de seguridad OPS DINING Activa</p>
+                </div>
+            </form>
+            <div id="form-status" class="mt-12 text-[10px] font-bold uppercase tracking-widest hidden p-6 border italic text-center text-navy"></div>
+        </div>
+    </section>
+
+    <!-- CONTACTO DIRECTO -->
+    <section id="contacto" class="py-20 bg-offwhite flex flex-col items-center text-center border-t border-navy/5 text-navy">
+        <div class="max-w-4xl mx-auto reveal px-6">
+            <h2 class="text-xl font-bold uppercase tracking-[0.3em] mb-12 text-center text-navy">Contacto Directo</h2>
+            <div class="flex flex-col md:flex-row gap-12 md:gap-24 items-center justify-center">
+                <div class="flex flex-col items-center">
+                    <span class="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40 mb-2 text-navy">Teléfono</span>
+                    <a href="tel:+34665644737" class="text-lg font-light hover:opacity-60 transition-opacity tracking-widest text-navy">+34 665 644 737</a>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40 mb-2 text-navy">Email</span>
+                    <a href="mailto:info.opsdining@gmail.com" class="text-lg font-light hover:opacity-60 transition-opacity lowercase tracking-widest text-navy">info.opsdining@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy py-16 text-offwhite px-10 text-center">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10 uppercase text-center">
+            <div class="flex items-center space-x-6 text-left">
+                <img src="./assets/images/logo.png" alt="Ops Dining Footer" class="h-14 md:h-16 w-auto object-contain brightness-0 invert">
+                <div class="text-offwhite text-lg font-bold tracking-[0.4em]">OPS DINING</div>
+            </div>
+            <div class="flex space-x-6 md:space-x-8 text-[9px] tracking-[0.2em] font-bold">
+                <a href="javascript:void(0)" onclick="openModal('aviso')" class="hover:text-gray-400 transition-colors">Aviso Legal</a>
+                <a href="javascript:void(0)" onclick="openModal('privacidad')" class="hover:text-gray-400 transition-colors">Privacidad</a>
+                <a href="javascript:void(0)" onclick="openModal('cookies')" class="hover:text-gray-400 transition-colors">Cookies</a>
+            </div>
+            <div class="text-[9px] tracking-[0.4em] opacity-40 uppercase text-center">&copy; 2026 OPS DINING. TODOS LOS DERECHOS RESERVADOS.</div>
+        </div>
+    </footer>
+
+    <!-- MODALES LEGALES -->
+    <div id="modal-aviso" class="modal" role="dialog" aria-modal="true" aria-label="Aviso Legal">
+        <div class="modal-content text-navy text-left legal-section">
+            <span class="close-modal" onclick="closeModal('aviso')" aria-label="Cerrar">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 uppercase tracking-widest border-b pb-4 text-left">Aviso Legal</h2>
+            <div class="space-y-4 text-sm leading-relaxed opacity-80 text-left">
+                <p><strong>Titular:</strong> OPS DINING.</p>
+                <p><strong>Contacto:</strong> info.opsdining@gmail.com | +34 665 644 737</p>
+                <h3>Objeto</h3>
+                <p>El presente sitio web tiene como finalidad informar sobre los servicios de automatización para hostelería ofrecidos por OPS DINING.</p>
+                <h3>Propiedad Intelectual</h3>
+                <p>Todos los contenidos de este sitio web, incluyendo textos, imágenes, logotipos, iconos y diseño gráfico, son propiedad de OPS DINING o de sus respectivos autores y están protegidos por las leyes de propiedad intelectual e industrial vigentes.</p>
+                <h3>Responsabilidad</h3>
+                <p>OPS DINING no se hace responsable de los posibles daños o perjuicios derivados de interferencias, omisiones, interrupciones, virus informáticos, averías y/o desconexiones en el funcionamiento operativo de este sistema electrónico.</p>
+                <h3>Legislación Aplicable</h3>
+                <p>Este aviso legal se rige por la legislación española vigente.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-privacidad" class="modal" role="dialog" aria-modal="true" aria-label="Política de Privacidad">
+        <div class="modal-content text-navy text-left legal-section">
+            <span class="close-modal" onclick="closeModal('privacidad')" aria-label="Cerrar">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 uppercase tracking-widest border-b pb-4 text-left">Política de Privacidad</h2>
+            <div class="space-y-4 text-sm leading-relaxed opacity-80 text-left">
+                <h3>Responsable del Tratamiento</h3>
+                <p><strong>Identidad:</strong> OPS DINING<br><strong>Email:</strong> info.opsdining@gmail.com<br><strong>Teléfono:</strong> +34 665 644 737</p>
+                <h3>Finalidad del Tratamiento</h3>
+                <p>Los datos personales recogidos a través del formulario de contacto serán tratados con la finalidad de gestionar su solicitud de auditoría y mantener el contacto comercial derivado de la misma.</p>
+                <h3>Base Legitimadora</h3>
+                <p>El consentimiento del interesado al enviar voluntariamente el formulario de contacto (Art. 6.1.a RGPD) y el interés legítimo en atender consultas comerciales (Art. 6.1.f RGPD).</p>
+                <h3>Destinatarios</h3>
+                <p>Los datos no serán cedidos a terceros salvo obligación legal. Los datos del formulario son procesados a través de servidores seguros.</p>
+                <h3>Plazo de Conservación</h3>
+                <p>Los datos se conservarán mientras exista interés mutuo y durante los plazos legalmente establecidos para atender posibles responsabilidades.</p>
+                <h3>Derechos del Interesado</h3>
+                <p>Puede ejercer sus derechos de acceso, rectificación, supresión, portabilidad, limitación y oposición enviando un email a <strong>info.opsdining@gmail.com</strong> indicando "PROTECCIÓN DE DATOS" en el asunto.</p>
+                <p>Asimismo, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" class="underline">www.aepd.es</a>).</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-cookies" class="modal" role="dialog" aria-modal="true" aria-label="Política de Cookies">
+        <div class="modal-content text-navy text-left legal-section">
+            <span class="close-modal" onclick="closeModal('cookies')" aria-label="Cerrar">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 uppercase tracking-widest border-b pb-4 text-left">Política de Cookies</h2>
+            <div class="space-y-4 text-sm leading-relaxed opacity-80 text-left">
+                <h3>¿Qué son las Cookies?</h3>
+                <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en su dispositivo para recordar información sobre su visita.</p>
+                <h3>Cookies que Utilizamos</h3>
+                <p><strong>Cookies técnicas (propias):</strong></p>
+                <ul>
+                    <li><strong>ops_cookies_accepted</strong> — Almacena su preferencia de aceptación de cookies. Duración: persistente. Tipo: localStorage.</li>
+                </ul>
+                <h3>Cookies de Terceros</h3>
+                <p>Este sitio carga recursos de los siguientes servicios externos que pueden establecer sus propias cookies:</p>
+                <ul>
+                    <li><strong>Google Fonts</strong> — Tipografías web. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline">Política de privacidad</a>.</li>
+                    <li><strong>Tailwind CSS CDN</strong> — Framework de estilos. No establece cookies.</li>
+                    <li><strong>Unsplash</strong> — Imágenes. <a href="https://unsplash.com/privacy" target="_blank" rel="noopener noreferrer" class="underline">Política de privacidad</a>.</li>
+                </ul>
+                <h3>Gestión de Cookies</h3>
+                <p>Puede configurar su navegador para bloquear o eliminar cookies. Tenga en cuenta que deshabilitar cookies técnicas puede afectar al correcto funcionamiento del sitio.</p>
+                <p>Última actualización: Abril 2026.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COOKIE CONSENT BANNER -->
+    <div id="cookie-banner" class="cookie-banner" role="alert">
+        <p class="cookie-banner__text">
+            Utilizamos cookies técnicas para el funcionamiento del sitio. 
+            <a href="javascript:void(0)" onclick="openModal('cookies')">Más información</a>
+        </p>
+        <button id="cookie-accept" class="cookie-banner__btn">Aceptar</button>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="./assets/js/security.js"></script>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/form-handler.js"></script>
+</body>
+</html>
