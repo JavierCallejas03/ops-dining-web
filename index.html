@@ -298,7 +298,7 @@
                     <p class="text-white/40 text-[10px] mt-2 uppercase tracking-widest">Análisis estratégico por Ops Dining</p>
                 </div>
 
-                <form id="secure-form" class="space-y-8">
+                <form id="secure-form" class="space-y-8" novalidate>
                     <div class="grid gap-6">
                         <div class="relative">
                             <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">Nombre del Responsable</label>
@@ -319,6 +319,7 @@
                             <div>
                                 <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">WhatsApp Directo</label>
                                 <input type="tel" name="telefono" required placeholder="600 000 000" 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                     class="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm placeholder:text-white/10 outline-none focus:border-[#94A3B8]/50 transition-all">
                             </div>
                         </div>
