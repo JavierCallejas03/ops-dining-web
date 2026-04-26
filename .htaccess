@@ -12,7 +12,7 @@ Header always set X-Content-Type-Options "nosniff"
 Header always set X-XSS-Protection "1; mode=block"
 
 # Referrer Policy
-Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://n8n.opsdining.com https://*.n8n.cloud https://*.app.n8n.cloud;"
+# Content Security Policy (Gestionado en index.html)
 
 # Permissions Policy
 Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
