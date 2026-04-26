@@ -101,7 +101,11 @@
                     </div>
                     <div>
                         <label>WhatsApp del Negocio *</label>
-                        <input type="tel" name="whatsapp_empresa" required placeholder="600 000 000">
+                        <input type="tel" name="whatsapp_empresa" required 
+                            pattern="[0-9]{9}" 
+                            maxlength="9"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                            placeholder="600 000 000">
                     </div>
                 </div>
                 <div>
@@ -114,7 +118,7 @@
         <!-- STEP 2: Sistema Reservas -->
         <div class="step-content" data-step="2">
             <h2 class="text-3xl font-bold mb-2">Conexión Técnica</h2>
-            <p class="text-white/40 text-sm mb-8">Necesitamos vincularnos con tu sistema de reservas y Google.</p>
+            <p class="text-white/40 text-sm mb-8">Credenciales de Reservas y WhatsApp Cloud API.</p>
             <div class="space-y-6">
                 <div>
                     <label>Software de Reservas Actual *</label>
@@ -132,13 +136,13 @@
                 </div>
                 
                 <div class="pt-4 border-t border-white/10">
-                    <label>Google Maps API Key (para ubicación)</label>
-                    <input type="password" name="google_maps_api" placeholder="AIzaSy...">
+                    <label>WhatsApp Cloud API: Access Token</label>
+                    <input type="password" name="whatsapp_token" placeholder="EAAB...">
                 </div>
                 
                 <div>
-                    <label>ID de Google Calendar (opcional)</label>
-                    <input type="text" name="google_calendar_id" placeholder="ejemplo@group.calendar.google.com">
+                    <label>WhatsApp Cloud API: Phone Number ID</label>
+                    <input type="text" name="whatsapp_phone_id" placeholder="109823...">
                 </div>
             </div>
         </div>
