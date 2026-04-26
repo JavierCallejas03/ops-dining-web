@@ -66,7 +66,7 @@
                 <a href="#resultados" class="hover:text-navy transition-colors">Resultados</a>
             </div>
             <div class="flex justify-end">
-                <a href="#formulario" class="border border-navy px-4 md:px-8 py-2 md:py-2.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap">Agendar Auditoría</a>
+                <button onclick="openModal('contacto')" class="border border-navy px-4 md:px-8 py-2 md:py-2.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap">Agendar Auditoría</button>
             </div>
         </nav>
     </header>
@@ -80,7 +80,7 @@
         <div class="relative z-10 max-w-5xl reveal pt-20">
             <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6 text-center">Convierte Cada Silla Vacía y Llamada Perdida en Facturación Blindada.</h1>
             <p class="text-base md:text-xl text-offwhite/70 mb-10 max-w-2xl mx-auto leading-relaxed font-light italic normal-case text-center">Automatizamos la gestión de reservas al 100% sin dar más trabajo a tu equipo de sala.</p>
-            <a href="#formulario" class="inline-block bg-offwhite text-navy px-12 py-5 font-bold text-xs tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500">Solicitar Auditoría</a>
+            <button onclick="openModal('contacto')" class="inline-block bg-offwhite text-navy px-12 py-5 font-bold text-xs tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500">Solicitar Auditoría</button>
         </div>
     </section>
 
@@ -170,32 +170,7 @@
         </div>
     </section>
 
-    <!-- FORMULARIO -->
-    <section id="formulario" class="py-24 bg-white flex flex-col items-center text-center">
-        <div class="max-w-2xl mx-auto reveal text-navy px-6">
-            <h2 class="text-3xl font-bold uppercase mb-4 text-center">SOLICITAR AUDITORÍA</h2>
-            <p class="text-navy/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-16 italic text-center">Análisis estratégico por el equipo de OPS DINING</p>
-            
-            <form id="secure-form" method="POST" class="space-y-12">
-                <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-                <div class="grid md:grid-cols-2 gap-12 text-center text-navy">
-                    <input type="text" name="nombre" required placeholder="Nombre de contacto" class="input-line" autocomplete="name">
-                    <input type="text" name="restaurante" required placeholder="Nombre del restaurante" class="input-line" autocomplete="organization">
-                </div>
-                <div class="grid md:grid-cols-2 gap-12 text-center text-navy">
-                    <input type="email" name="email" required placeholder="Email Corporativo" class="input-line" autocomplete="email">
-                    <input type="tel" name="telefono" placeholder="Tu teléfono" required pattern="[0-9]{9}" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="input-line">
-                </div>
-                <div class="pt-10 text-center">
-                    <button type="submit" id="submit-btn" class="w-full bg-navy text-offwhite py-6 font-bold uppercase tracking-[0.4em] text-[11px] hover:bg-opacity-90 transition-all duration-500">
-                        Enviar Solicitud
-                    </button>
-                    <p class="mt-6 text-[8px] opacity-20 uppercase tracking-[0.3em] text-center text-navy">Capa de seguridad OPS DINING Activa</p>
-                </div>
-            </form>
-            <div id="form-status" class="mt-12 text-[10px] font-bold uppercase tracking-widest hidden p-6 border italic text-center text-navy"></div>
-        </div>
-    </section>
+
 
     <!-- CONTACTO DIRECTO -->
     <section id="contacto" class="py-20 bg-offwhite flex flex-col items-center text-center border-t border-navy/5 text-navy">
@@ -305,6 +280,62 @@
             <a href="javascript:void(0)" onclick="openModal('cookies')">Más información</a>
         </p>
         <button id="cookie-accept" class="cookie-banner__btn">Aceptar</button>
+    </div>
+
+    <!-- MODAL DE CONTACTO PREMIUM -->
+    <div id="modal-contacto" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-navy/80 backdrop-blur-2xl transition-opacity" onclick="closeModal('contacto')"></div>
+        <div class="flex min-h-screen items-center justify-center p-4">
+            <div class="relative bg-navy border border-white/10 w-full max-w-lg p-8 md:p-12 shadow-[0_0_50px_rgba(197,160,89,0.15)] reveal active" style="opacity: 1; transform: translateY(0);">
+                <!-- Botón de Cerrar -->
+                <button onclick="closeModal('contacto')" class="absolute top-6 right-6 text-white/30 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="text-center mb-10">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-4 block">Primer Paso del Despegue</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white uppercase tracking-tighter italic">Solicita tu Auditoría</h2>
+                    <p class="text-white/40 text-[10px] mt-2 uppercase tracking-widest">Análisis estratégico por Ops Dining</p>
+                </div>
+
+                <form id="secure-form" class="space-y-8">
+                    <div class="grid gap-6">
+                        <div class="relative">
+                            <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">Nombre del Responsable</label>
+                            <input type="text" name="nombre" required placeholder="Ej: Javier Callejas" 
+                                class="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm placeholder:text-white/10 outline-none focus:border-[#c5a059]/50 transition-all">
+                        </div>
+                        <div class="relative">
+                            <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">Nombre del Restaurante</label>
+                            <input type="text" name="restaurante" required placeholder="Ej: La Parrilla de Juan" 
+                                class="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm placeholder:text-white/10 outline-none focus:border-[#c5a059]/50 transition-all">
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">Email Corporativo</label>
+                                <input type="email" name="email" required placeholder="info@restaurante.com" 
+                                    class="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm placeholder:text-white/10 outline-none focus:border-[#c5a059]/50 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/30 mb-2 block">WhatsApp Directo</label>
+                                <input type="tel" name="telefono" required placeholder="600 000 000" 
+                                    class="w-full bg-white/5 border border-white/10 px-4 py-4 text-white text-sm placeholder:text-white/10 outline-none focus:border-[#c5a059]/50 transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="form-status" class="hidden text-center p-4 border border-[#c5a059]/30 text-[9px] font-bold uppercase tracking-[0.2em] text-[#c5a059] italic bg-[#c5a059]/5"></div>
+
+                    <div class="pt-4">
+                        <button type="submit" id="submit-btn" 
+                            class="w-full bg-[#c5a059] text-navy py-6 font-bold text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-navy transition-all duration-500 shadow-lg shadow-[#c5a059]/20">
+                            Enviar Solicitud
+                        </button>
+                        <p class="mt-6 text-[8px] text-white/10 uppercase tracking-[0.4em] text-center">Capa de Seguridad Ops Dining Activa</p>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- SCRIPTS -->
