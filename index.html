@@ -184,7 +184,7 @@
                 </div>
                 <div class="grid md:grid-cols-2 gap-12 text-center text-navy">
                     <input type="email" name="email" required placeholder="Email Corporativo" class="input-line" autocomplete="email">
-                    <input type="tel" name="telefono" required placeholder="Teléfono Directo" class="input-line" autocomplete="tel">
+                    <input type="tel" name="telefono" placeholder="Tu teléfono" required pattern="[0-9]{9}" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="input-line">
                 </div>
                 <div class="pt-10 text-center">
                     <button type="submit" id="submit-btn" class="w-full bg-navy text-offwhite py-6 font-bold uppercase tracking-[0.4em] text-[11px] hover:bg-opacity-90 transition-all duration-500">
