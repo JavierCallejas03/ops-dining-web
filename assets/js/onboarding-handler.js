@@ -48,28 +48,58 @@ document.addEventListener('DOMContentLoaded', () => {
         let isValid = true;
 
         inputs.forEach(input => {
-            // Eliminar errores previos
+            // 1. Limpiar estados previos
             input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            const existingError = input.parentNode.querySelector('.error-msg');
+            const parent = input.closest('div');
+            const existingError = parent.querySelector('.error-msg');
             if (existingError) existingError.remove();
 
-            // Solo validar si es requerido o tiene valor
-            if (input.hasAttribute('required') || input.value.trim() !== '') {
-                if (!input.checkValidity()) {
-                    isValid = false;
-                    input.style.borderColor = '#ff4444';
-                    
-                    // Crear mensaje de error
-                    const errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-msg text-[#ff4444] text-[10px] mt-1 italic animate-fade-in';
-                    errorMsg.innerText = input.title || 'Este campo es obligatorio o tiene un formato incorrecto';
-                    input.parentNode.appendChild(errorMsg);
+            let isFieldValid = true;
+            let errorMsg = "";
+
+            // 2. Validación de campos obligatorios
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                isFieldValid = false;
+                errorMsg = "Este campo es obligatorio";
+            } 
+            // 3. Validación de patrones (ej: el teléfono de 9 números)
+            else if (input.hasAttribute('pattern') && input.value.trim()) {
+                const pattern = new RegExp("^" + input.getAttribute('pattern') + "$");
+                if (!pattern.test(input.value.trim())) {
+                    isFieldValid = false;
+                    errorMsg = input.title || "Formato incorrecto";
                 }
+            }
+            // 4. Validación de Emails
+            else if (input.type === 'email' && input.value.trim()) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(input.value.trim())) {
+                    isFieldValid = false;
+                    errorMsg = "Introduce un email válido";
+                }
+            }
+            // 5. Validación de URLs
+            else if (input.type === 'url' && input.value.trim()) {
+                try { 
+                    new URL(input.value.trim()); 
+                } catch(_) {
+                    isFieldValid = false;
+                    errorMsg = "Introduce una URL válida (ej: https://web.com)";
+                }
+            }
+
+            // 6. Aplicar visual de error si falla
+            if (!isFieldValid) {
+                isValid = false;
+                input.style.borderColor = '#ef4444';
+                const msg = document.createElement('p');
+                msg.className = 'error-msg text-[#ef4444] text-[10px] mt-1 italic animate-pulse';
+                msg.innerText = errorMsg;
+                parent.appendChild(msg);
             }
         });
 
         if (!isValid) {
-            // Hacer scroll al primer error
             const firstError = activeStep.querySelector('.error-msg');
             if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -96,29 +126,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!validateStep()) return;
 
-        // Show loading state on button
+        // Show loading state
         submitBtn.disabled = true;
         const originalText = submitBtn.innerText;
-        submitBtn.innerText = 'Enviando Dossier...';
+        submitBtn.innerText = 'Enviando...';
 
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-        
-        // Add extra metadata
         data.submittedAt = new Date().toISOString();
-        data.source = 'Onboarding Page';
 
         try {
             const response = await fetch(ONBOARDING_WEBHOOK_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             if (response.ok) {
-                // Mostrar éxito con overlay y bloquear scroll
                 successMessage.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 window.scrollTo(0, 0);
@@ -126,8 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Error en el servidor');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Hubo un problema al enviar el dossier. Por favor, inténtalo de nuevo.');
+            alert('Error al enviar. Inténtalo de nuevo.');
             submitBtn.disabled = false;
             submitBtn.innerText = originalText;
         }
