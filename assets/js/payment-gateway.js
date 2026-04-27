@@ -10,7 +10,7 @@ const GATEWAY_CONFIG = {
     provider: 'stripe',
 
     // Set false ONLY when you have added your Stripe Publishable Key below
-    demoMode: false,
+    demoMode: true,
 
     stripe: {
         // Replace with your Stripe publishable key (pk_live_... or pk_test_...)
