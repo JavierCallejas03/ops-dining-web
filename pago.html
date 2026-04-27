@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Seguro | Ops Dining</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root { --navy: #060610; --gold: #c5a059; --offwhite: #f5f5f7; }
+        body { background: var(--navy); color: var(--offwhite); font-family: 'Outfit', sans-serif; }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 1rem; }
+        .input-pay { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; padding: 0.875rem 1rem !important; border-radius: 0.5rem !important; width: 100%; outline: none; transition: all 0.3s; font-family: 'Outfit', sans-serif; font-size: 0.9rem; }
+        .input-pay:focus { border-color: var(--gold) !important; background: rgba(255,255,255,0.08) !important; }
+        .input-pay::placeholder { color: rgba(255,255,255,0.25); }
+        .field-error { color: #ef4444; font-size: 0.7rem; margin-top: 0.25rem; letter-spacing: 0.05em; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+        @keyframes successIn { from { opacity:0; transform:scale(0.9) translateY(30px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        @keyframes pulse-ring { 0% { transform:scale(0.8); opacity:0.5; } 100% { transform:scale(2.5); opacity:0; } }
+        .animate-fade-up { animation: fadeUp 0.6s ease-out both; }
+        .animate-shake { animation: shake 0.4s ease; }
+        .animate-success-in { animation: successIn 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- HEADER -->
+    <header class="w-full border-b border-white/5 bg-white/[0.02] backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="./assets/images/logo.png" alt="Ops Dining" class="h-8 w-auto object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity">
+                <span class="text-sm font-bold tracking-[0.25em] uppercase opacity-80">OPS DINING</span>
+            </a>
+            <div class="flex items-center gap-2 text-emerald-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Pago Seguro</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ERROR: Invalid plan -->
+    <div id="error-page" class="hidden min-h-[80vh] flex items-center justify-center px-6">
+        <div class="text-center max-w-md">
+            <div class="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-3">Enlace no válido</h2>
+            <p class="text-white/50 text-sm mb-8">Este enlace de pago no contiene un plan válido. Contacta con Ops Dining para recibir tu enlace personalizado.</p>
+            <a href="index.html" class="inline-block border border-white/20 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/5 transition-all rounded-lg">Volver al inicio</a>
+        </div>
+    </div>
+
+    <!-- CHECKOUT CONTENT -->
+    <main id="checkout-content" class="hidden max-w-6xl mx-auto px-4 sm:px-8 py-8 lg:py-12">
+        <div class="grid lg:grid-cols-[1fr,380px] gap-8 items-start">
+
+            <!-- LEFT COLUMN: Form -->
+            <div>
+                <form id="checkout-form" novalidate>
+
+                    <!-- BILLING -->
+                    <section class="glass-card p-6 sm:p-8 animate-fade-up">
+                        <h2 class="text-lg font-bold uppercase tracking-[0.15em] mb-6 flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">1</span>
+                            Datos de Facturación
+                        </h2>
+                        <div class="grid gap-5">
+                            <div>
+                                <label class="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/40 mb-1.5 block">Nombre completo *</label>
+                                <input type="text" name="nombre" required placeholder="Ej: María García López" class="input-pay" autocomplete="name">
+                                <p class="field-error hidden"></p>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/40 mb-1.5 block">Email *</label>
+                                <input type="email" name="email" required placeholder="facturacion@empresa.com" class="input-pay" autocomplete="email">
+                                <p class="field-error hidden"></p>
+                            </div>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/40 mb-1.5 block">Empresa / Razón Social *</label>
+                                    <input type="text" name="empresa" required placeholder="Hostelería Faro SL" class="input-pay" autocomplete="organization">
+                                    <p class="field-error hidden"></p>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/40 mb-1.5 block">CIF *</label>
+                                    <input type="text" name="cif" required placeholder="B12345678" class="input-pay" maxlength="9">
+                                    <p class="field-error hidden"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PAYMENT METHOD -->
+                    <section class="glass-card p-6 sm:p-8 mt-6 animate-fade-up delay-1">
+                        <h2 class="text-lg font-bold uppercase tracking-[0.15em] mb-6 flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">2</span>
+                            Método de Pago
+                        </h2>
+
+                        <!-- Tabs -->
+                        <div class="flex gap-2 mb-6">
+                            <button type="button" data-method="card" class="flex-1 py-3 px-4 rounded-lg text-[11px] font-bold uppercase tracking-[0.1em] border-2 border-amber-500 text-white bg-white/5 transition-all">
+                                💳 Tarjeta
+                            </button>
+                            <button type="button" data-method="paypal" class="flex-1 py-3 px-4 rounded-lg text-[11px] font-bold uppercase tracking-[0.1em] border-2 border-transparent text-white/40 hover:text-white/60 transition-all">
+                                PayPal
+                            </button>
+                            <button type="button" data-method="transfer" class="flex-1 py-3 px-4 rounded-lg text-[11px] font-bold uppercase tracking-[0.1em] border-2 border-transparent text-white/40 hover:text-white/60 transition-all">
+                                Transferencia
+                            </button>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div id="method-card" class="method-content">
+                            <div id="stripe-card-element" class="hidden input-pay min-h-[44px]"></div>
+                            <div id="demo-card-inputs" class="space-y-4">
+                                <div>
+                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" class="input-pay" inputmode="numeric" autocomplete="cc-number">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" id="card-expiry" placeholder="MM / AA" class="input-pay" inputmode="numeric" autocomplete="cc-exp">
+                                    <input type="text" id="card-cvc" placeholder="CVC" class="input-pay" inputmode="numeric" autocomplete="cc-csc">
+                                </div>
+                            </div>
+                            <!-- Card logos -->
+                            <div class="flex items-center gap-3 mt-4 opacity-40">
+                                <span class="text-[10px] font-bold border border-white/20 rounded px-2 py-0.5">VISA</span>
+                                <span class="text-[10px] font-bold border border-white/20 rounded px-2 py-0.5">MC</span>
+                                <span class="text-[10px] font-bold border border-white/20 rounded px-2 py-0.5">AMEX</span>
+                                <span class="text-[10px] font-bold border border-white/20 rounded px-2 py-0.5 hidden sm:inline">APPLE PAY</span>
+                                <span class="text-[10px] font-bold border border-white/20 rounded px-2 py-0.5 hidden sm:inline">GOOGLE PAY</span>
+                            </div>
+                        </div>
+
+                        <!-- PayPal Content -->
+                        <div id="method-paypal" class="method-content hidden">
+                            <div class="text-center py-8 border border-dashed border-white/10 rounded-lg">
+                                <div class="text-3xl mb-3">🅿️</div>
+                                <p class="text-white/50 text-sm mb-1">Serás redirigido a PayPal</p>
+                                <p class="text-white/30 text-[10px]">Pago seguro con tu cuenta PayPal</p>
+                            </div>
+                        </div>
+
+                        <!-- Transfer Content -->
+                        <div id="method-transfer" class="method-content hidden">
+                            <div class="space-y-4 p-5 bg-white/[0.03] rounded-lg border border-white/5">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 block mb-1">Beneficiario</span>
+                                    <span class="text-sm font-semibold">OPS DINING</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 block mb-1">IBAN</span>
+                                    <span class="text-sm font-mono tracking-wider">ES00 0000 0000 00 0000000000</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 block mb-1">Referencia (obligatoria)</span>
+                                    <span id="transfer-ref" class="text-sm font-bold text-amber-400 font-mono">—</span>
+                                </div>
+                                <div class="pt-3 border-t border-white/5">
+                                    <p class="text-[11px] text-white/40 leading-relaxed">Incluye la referencia en el concepto de la transferencia. Envía el comprobante a <strong class="text-white/60">info.opsdining@gmail.com</strong> para activar tu servicio.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- TERMS -->
+                    <div class="mt-6 px-2 animate-fade-up delay-2">
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <input type="checkbox" id="terms-check" class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 accent-amber-500 cursor-pointer">
+                            <span class="text-[11px] text-white/40 leading-relaxed group-hover:text-white/60 transition-colors">
+                                Acepto los <a href="javascript:void(0)" class="underline text-white/60 hover:text-amber-400 transition-colors">términos y condiciones</a> y la
+                                <a href="javascript:void(0)" class="underline text-white/60 hover:text-amber-400 transition-colors">política de privacidad</a> de Ops Dining.
+                            </span>
+                        </label>
+                        <p id="terms-error" class="hidden text-red-400 text-[10px] mt-1 ml-7">Debes aceptar los términos para continuar</p>
+                    </div>
+
+                    <!-- PAYMENT ERROR -->
+                    <div id="payment-error" class="hidden mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center"></div>
+
+                    <!-- PAY BUTTON -->
+                    <button type="submit" id="pay-btn" class="w-full mt-6 bg-gradient-to-r from-amber-600 to-yellow-500 text-[#060610] py-4 sm:py-5 rounded-xl font-extrabold text-sm sm:text-base tracking-wide hover:shadow-[0_0_40px_rgba(197,160,89,0.3)] transition-all duration-300 animate-fade-up delay-3">
+                        <span>Pagar <span id="pay-btn-amount">0,00 €</span></span>
+                    </button>
+
+                    <!-- TRUST SIGNALS -->
+                    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-white/20 animate-fade-up delay-3">
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <span class="text-[9px] font-bold uppercase tracking-[0.1em]">SSL 256-bit</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <span class="text-[9px] font-bold uppercase tracking-[0.1em]">PCI DSS</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span class="text-[9px] font-bold uppercase tracking-[0.1em]">Datos protegidos</span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- RIGHT COLUMN: Order Summary -->
+            <aside class="lg:sticky lg:top-8">
+                <div class="glass-card p-6 sm:p-8 animate-fade-up delay-1">
+                    <h3 class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-4">Resumen del Pedido</h3>
+
+                    <span id="plan-badge" class="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.25em] bg-gradient-to-r from-amber-600 to-yellow-500 text-white">—</span>
+
+                    <h4 id="summary-plan-name" class="text-xl font-bold mt-4 mb-1">—</h4>
+                    <p id="summary-plan-subtitle" class="text-white/40 text-sm mb-6">—</p>
+
+                    <!-- Features -->
+                    <ul id="summary-features" class="space-y-3 mb-8"></ul>
+
+                    <!-- Price breakdown -->
+                    <div class="border-t border-white/10 pt-5 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-white/50">Subtotal</span>
+                            <span id="summary-subtotal" class="font-medium">—</span>
+                        </div>
+                        <div id="summary-discount-row" class="hidden flex justify-between text-sm">
+                            <span class="text-emerald-400"><span id="summary-discount-label">Descuento</span></span>
+                            <span id="summary-discount-amount" class="text-emerald-400 font-medium">—</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-white/50">IVA (21%)</span>
+                            <span id="summary-iva" class="font-medium">—</span>
+                        </div>
+                        <div class="border-t border-white/10 pt-4 flex justify-between items-baseline">
+                            <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40">Total</span>
+                            <span id="summary-total" class="text-2xl font-extrabold text-amber-400">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Branding -->
+                    <div class="mt-8 pt-5 border-t border-white/5 text-center">
+                        <p class="text-[8px] font-bold uppercase tracking-[0.3em] text-white/15">Powered by Ops Dining</p>
+                    </div>
+                </div>
+
+                <!-- Security note -->
+                <div class="mt-4 p-4 rounded-lg border border-emerald-500/10 bg-emerald-500/5">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <div>
+                            <p class="text-emerald-400 text-[11px] font-bold mb-1">Pago 100% seguro</p>
+                            <p class="text-white/30 text-[10px] leading-relaxed">Tus datos de pago están cifrados y nunca se almacenan en nuestros servidores. Procesado por pasarela certificada PCI DSS Level 1.</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="success-overlay" class="hidden fixed inset-0 z-[9999] bg-[#060610]/98 backdrop-blur-3xl flex items-center justify-center p-6">
+        <div class="success-card max-w-lg w-full text-center">
+            <!-- Animated ring -->
+            <div class="relative w-24 h-24 mx-auto mb-8">
+                <div class="absolute inset-0 rounded-full bg-amber-500/20" style="animation: pulse-ring 2s ease-out infinite;"></div>
+                <div class="absolute inset-0 rounded-full bg-gradient-to-br from-amber-500 to-yellow-400 flex items-center justify-center shadow-[0_0_60px_rgba(197,160,89,0.4)]">
+                    <svg class="w-12 h-12 text-[#060610]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </div>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">¡Pago Recibido!</h2>
+            <p class="text-white/50 text-sm mb-8 max-w-sm mx-auto leading-relaxed">Tu pedido ha sido procesado correctamente. Recibirás un email de confirmación en breve.</p>
+
+            <div class="glass-card p-6 text-left space-y-3 mb-8">
+                <div class="flex justify-between text-sm">
+                    <span class="text-white/40">Referencia</span>
+                    <span id="success-ref" class="font-bold font-mono text-amber-400">—</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-white/40">Plan</span>
+                    <span id="success-plan" class="font-semibold">—</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-white/40">Total</span>
+                    <span id="success-total" class="font-bold text-emerald-400">—</span>
+                </div>
+                <div class="flex justify-between text-sm border-t border-white/5 pt-3">
+                    <span class="text-white/40">Confirmación enviada a</span>
+                    <span id="success-email" class="font-medium">—</span>
+                </div>
+            </div>
+
+            <a href="index.html" class="inline-block bg-white/10 hover:bg-white/15 px-10 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-[0.2em] transition-all">
+                Volver al inicio
+            </a>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="./assets/js/payment-gateway.js"></script>
+    <script src="./assets/js/payment-ui.js"></script>
+</body>
+</html>
