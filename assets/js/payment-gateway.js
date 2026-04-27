@@ -40,11 +40,10 @@ const GATEWAY_CONFIG = {
 const PLANS = {
     basico: {
         id: 'basico',
-        name: 'Plan Básico',
-        subtitle: 'Recepcionista Virtual 24/7',
+        name: 'Recepcionista Virtual 24/7',
+        subtitle: 'Soporte 24/7 y Reservas',
         price: 1000,
         features: [
-            'Recepcionista Virtual 24/7',
             'Captación de reservas web y RRSS',
             'Atención fuera de horario comercial',
             'Soporte por email',
@@ -52,12 +51,11 @@ const PLANS = {
     },
     core: {
         id: 'core',
-        name: 'Plan Core',
-        subtitle: 'Automatización Completa',
+        name: 'Guardián de Reservas',
+        subtitle: 'Automatización y No-Shows',
         price: 2000,
         features: [
             'Todo del Plan Básico',
-            'Guardián de Reservas activo',
             'Confirmaciones automáticas',
             'Reducción de No-Shows',
             'Soporte prioritario',
@@ -65,12 +63,11 @@ const PLANS = {
     },
     high: {
         id: 'high',
-        name: 'Plan High Ticket',
-        subtitle: 'Suite Premium Integral',
+        name: 'Escudo Telefónico',
+        subtitle: 'Gestión Integral de Llamadas',
         price: 3000,
         features: [
             'Todo del Plan Core',
-            'Escudo Telefónico premium',
             'Atención de voz en hora punta',
             'Gestión integral de llamadas',
             'Soporte 24/7 dedicado',
