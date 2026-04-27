@@ -1,0 +1,20 @@
+{
+  "billing": {
+    "name": "Test Final",
+    "email": "info.opsdining@gmail.com",
+    "company": "Ops Dining",
+    "cif": "B12345678"
+  },
+  "pricing": {
+    "plan": {
+      "name": "Recepcionista Virtual 24/7"
+    },
+    "formatted": {
+      "base": "1.500,00 €",
+      "iva": "315,00 €",
+      "total": "1.815,00 €"
+    }
+  },
+  "reference": "OD-FINAL-01",
+  "transactionId": "pi_final_123"
+}

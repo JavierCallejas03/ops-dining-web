@@ -1,0 +1,21 @@
+{
+  "reference": "OD-2026-TEST01",
+  "billing": {
+    "name": "Cliente de Prueba",
+    "email": "test@example.com",
+    "company": "Empresa Test SL",
+    "cif": "B12345678"
+  },
+  "pricing": {
+    "plan": {
+      "name": "Plan Core",
+      "subtitle": "Automatización Completa"
+    },
+    "formatted": {
+      "base": "2.000,00 €",
+      "iva": "420,00 €",
+      "total": "2.420,00 €"
+    }
+  },
+  "transactionId": "pi_test_123456"
+}
