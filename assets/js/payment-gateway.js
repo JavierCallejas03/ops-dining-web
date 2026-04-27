@@ -10,11 +10,11 @@ const GATEWAY_CONFIG = {
     provider: 'stripe',
 
     // Set false ONLY when you have added your Stripe Publishable Key below
-    demoMode: true,
+    demoMode: false,
 
     stripe: {
         // Replace with your Stripe publishable key (pk_live_... or pk_test_...)
-        publishableKey: '',
+        publishableKey: 'pk_live_51TQs4KR7FprGmFRA4SoA0CodGoSG2PIpkvkFsm3HaNrnD1zN6DElp5KmL3u3ncoTFE01bxGOIIrf95NHu52kzM3400TGX3LIvP',
         // n8n webhook URL that creates PaymentIntent server-side
         paymentEndpoint: 'https://n8n.opsdining.com/webhook/create-payment-intent',
     },
