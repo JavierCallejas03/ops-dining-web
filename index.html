@@ -73,7 +73,7 @@
                 <a href="#resultados" class="hover:text-navy transition-colors">Resultados</a>
             </div>
             <div class="flex justify-end">
-                <button onclick="openModal('contacto')" class="border border-navy px-4 md:px-8 py-2 md:py-2.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap">Agendar Auditoría</button>
+                <button onclick="openModal('contacto')" class="border-2 border-navy px-6 md:px-10 py-3 md:py-3.5 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-navy hover:text-offwhite transition-all duration-500 whitespace-nowrap rounded-full">Agendar Auditoría</button>
             </div>
         </nav>
     </header>
@@ -87,7 +87,7 @@
         <div class="relative z-10 max-w-5xl reveal pt-20">
             <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6 text-center">Convierte Cada Silla Vacía y Llamada Perdida en Facturación Blindada.</h1>
             <p class="text-base md:text-xl text-offwhite/70 mb-10 max-w-2xl mx-auto leading-relaxed font-light italic normal-case text-center">Automatizamos la gestión de reservas al 100% sin dar más trabajo a tu equipo de sala.</p>
-            <button onclick="openModal('contacto')" class="inline-block bg-offwhite text-navy px-12 py-5 font-bold text-xs tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500">Solicitar Auditoría</button>
+            <button onclick="openModal('contacto')" class="inline-block bg-offwhite text-navy px-14 py-6 font-bold text-sm tracking-[0.3em] hover:bg-navy hover:text-offwhite transition-all duration-500 rounded-full shadow-2xl transform hover:scale-105">Solicitar Auditoría</button>
         </div>
     </section>
 
@@ -180,8 +180,11 @@
 
 
     <!-- CONTACTO DIRECTO -->
-    <section id="contacto" class="py-20 bg-offwhite flex flex-col items-center text-center border-t border-navy/5 text-navy">
+    <section id="contacto" class="py-24 bg-offwhite flex flex-col items-center text-center border-t border-navy/5 text-navy">
         <div class="max-w-4xl mx-auto reveal px-6">
+            <div class="mb-20">
+                <button onclick="openModal('contacto')" class="bg-navy text-offwhite px-16 py-8 font-bold text-sm tracking-[0.4em] uppercase hover:bg-[#94A3B8] hover:text-navy transition-all duration-500 rounded-full shadow-2xl transform hover:scale-105">Agendar Mi Auditoría Ahora</button>
+            </div>
             <h2 class="text-xl font-bold uppercase tracking-[0.3em] mb-12 text-center text-navy">Contacto Directo</h2>
             <div class="flex flex-col md:flex-row gap-12 md:gap-24 items-center justify-center">
                 <div class="flex flex-col items-center">
@@ -286,7 +289,7 @@
             Utilizamos cookies técnicas para el funcionamiento del sitio. 
             <a href="javascript:void(0)" onclick="openModal('cookies')">Más información</a>
         </p>
-        <button id="cookie-accept" class="cookie-banner__btn">Aceptar</button>
+        <button id="cookie-accept" class="cookie-banner__btn px-6 py-2 rounded-full uppercase text-[10px] font-bold tracking-widest">Aceptar</button>
     </div>
 
     <!-- MODAL DE CONTACTO PREMIUM -->
@@ -336,7 +339,7 @@
 
                     <div class="pt-4">
                         <button type="submit" id="submit-btn" 
-                            class="w-full bg-[#94A3B8] text-navy py-6 font-bold text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-navy transition-all duration-500 shadow-lg shadow-[#94A3B8]/10">
+                            class="w-full bg-[#94A3B8] text-navy py-8 font-bold text-xs tracking-[0.4em] uppercase hover:bg-white hover:text-navy transition-all duration-500 shadow-lg shadow-[#94A3B8]/10 rounded-full">
                             Enviar Solicitud
                         </button>
                         <p class="mt-6 text-[8px] text-white/10 uppercase tracking-[0.4em] text-center">Capa de Seguridad Ops Dining Activa</p>
