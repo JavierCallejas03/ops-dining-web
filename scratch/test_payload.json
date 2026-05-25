@@ -1,0 +1,15 @@
+{
+  "event": "messages.upsert",
+  "instance": "OpsDiningPro",
+  "data": {
+    "key": {
+      "remoteJid": "34644941659@s.whatsapp.net",
+      "fromMe": false,
+      "id": "TEST-ID-123"
+    },
+    "message": {
+      "conversation": "Hola, me gustaria reservar una mesa para 4 personas este viernes a las 21:00"
+    },
+    "pushName": "Javier"
+  }
+}

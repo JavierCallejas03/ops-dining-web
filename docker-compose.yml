@@ -1,0 +1,21 @@
+version: '3'
+services:
+  evolution-api:
+    image: atendai/evolution-api:v2.2.1
+    container_name: evolution-api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_URL=http://178.104.234.176:8080
+      - DOCKER_ENV=true
+      - LOG_LEVEL=ERROR
+      - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=OpsDining2026
+      - DATABASE_PROVIDER=sqlite
+      - DATABASE_CONNECTION_URI=sqlite://./db.sqlite
+      - REDIS_ENABLED=false
+      - WEBHOOK_GLOBAL_ENABLED=false
+    volumes:
+      - /root/evolution_instances:/evolution/instances
+      - /root/evolution_store:/evolution/store

@@ -1,0 +1,10 @@
+{
+  "webhook": {
+    "enabled": true,
+    "url": "https://n8n.opsdining.com/webhook/whatsapp-incoming",
+    "webhookByEvents": true,
+    "events": [
+      "MESSAGES_UPSERT"
+    ]
+  }
+}

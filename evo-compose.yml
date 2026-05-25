@@ -1,0 +1,74 @@
+services:
+  evolution-api:
+    image: atendai/evolution-api:v2.2.1
+    container_name: evolution-api
+    restart: always
+    ports:
+      - "8082:8080"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    environment:
+      - SERVER_URL=http://178.104.234.176:8082
+      - DOCKER_ENV=true
+      - LOG_LEVEL=ERROR
+      - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=OpsDining2026
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://evo:evo123@postgres:5432/evolution?schema=public
+      - DATABASE_CONNECTION_CLIENT_NAME=evolution
+      - DATABASE_SAVE_DATA_INSTANCE=true
+      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
+      - DATABASE_SAVE_MESSAGE_UPDATE=true
+      - DATABASE_SAVE_DATA_CONTACTS=true
+      - DATABASE_SAVE_DATA_CHATS=true
+      - DATABASE_SAVE_DATA_LABELS=true
+      - DATABASE_SAVE_DATA_HISTORIC=true
+      - QR_CODE_FOR_TERMINAL=true
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=redis://redis:6379/1
+      - CACHE_REDIS_PREFIX_KEY=evo
+      - CACHE_REDIS_SAVE_INSTANCES=true
+      - CACHE_LOCAL_ENABLED=false
+      - WEBHOOK_GLOBAL_ENABLED=false
+    volumes:
+      - /root/evolution_instances:/evolution/instances
+      - /root/evolution_store:/evolution/store
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15
+    container_name: evolution-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=evo
+      - POSTGRES_PASSWORD=evo123
+      - POSTGRES_DB=evolution
+    volumes:
+      - evolution_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evo -d evolution"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    container_name: evolution-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - evolution_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  evolution_db:
+  evolution_redis:
