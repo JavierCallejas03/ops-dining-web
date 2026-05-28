@@ -297,12 +297,16 @@
                 cif: $('[name="cif"]').value.trim(),
             };
 
-            // Process with gateway
-            const result = await gateway.processPayment(pricing.total, 'eur', {
-                plan: currentPlan,
-                reference,
-                ...billingData,
-            });
+            // Process with gateway if using card
+            let result = { success: true, id: `${selectedMethod}_${Date.now()}`, demo: false };
+            
+            if (selectedMethod === 'card') {
+                result = await gateway.processPayment(pricing.total, 'eur', {
+                    plan: currentPlan,
+                    reference,
+                    ...billingData,
+                });
+            }
 
             // Send order data to webhook
             await sendOrderToWebhook({
