@@ -24,9 +24,9 @@ const GATEWAY_CONFIG = {
     },
 
     transfer: {
-        iban: 'ES00 0000 0000 00 0000000000',
+        iban: 'ES77 0182 0525 4002 0162 6506',
         beneficiary: 'OPS DINING',
-        bank: 'Tu Banco',
+        bank: 'BBVA',
         concept: 'Servicio Ops Dining',
     },
 
