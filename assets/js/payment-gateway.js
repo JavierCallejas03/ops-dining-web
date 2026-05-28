@@ -164,7 +164,7 @@ class StripeAdapter extends PaymentAdapter {
         // 1. Call n8n webhook to create PaymentIntent
         const response = await fetch(this.config.paymentEndpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
             body: JSON.stringify({ amount: Math.round(amount * 100), currency, metadata }),
         });
 
