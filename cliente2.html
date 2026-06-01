@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon-192x192.png">
 
-    <title>Ops Dining - Centro de Reservas V4</title>
+    <title>Ops Dining - Centro de Reservas</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -497,7 +497,7 @@
         async function initDashboard() {
             if (NOMBRE_RESTAURANTE) {
                 document.getElementById('dashboardTitle').innerText = NOMBRE_RESTAURANTE;
-                document.title = NOMBRE_RESTAURANTE + " - V4";
+                document.title = NOMBRE_RESTAURANTE;
             }
             const today = new Date();
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
