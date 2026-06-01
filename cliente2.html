@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +22,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
@@ -42,8 +43,6 @@
 
     <style>
         body {
-            background-color: #F8FAFC;
-            color: #0F172A;
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -52,6 +51,9 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
         .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -71,21 +73,37 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 xl:px-12">
+<body class="min-h-screen p-4 md:p-8 xl:px-12 bg-brand-bg text-brand-dark dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
 
     <!-- OVERLAYS -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-brand-bg z-50 flex items-center justify-center transition-opacity duration-500 no-print">
+    <!-- PIN Overlay -->
+    <div id="pinOverlay" class="fixed inset-0 bg-brand-bg dark:bg-slate-900 z-[100] flex items-center justify-center transition-opacity duration-500 hidden no-print">
+        <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-8 max-w-sm w-full text-center shadow-xl">
+            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-brand-dark dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Acceso Restringido</h2>
+            <p class="text-brand-accent text-sm mb-6">Introduce el PIN de gerente para acceder al Centro de Reservas.</p>
+            <input type="password" id="pinInput" maxlength="4" placeholder="••••" class="w-full text-center text-3xl tracking-[1em] font-bold py-3 bg-slate-50 dark:bg-slate-900 border border-brand-accent/30 rounded-lg mb-4 outline-none focus:border-brand-dark dark:focus:border-brand-accent transition-colors">
+            <button onclick="verifyPin()" class="w-full bg-brand-dark text-white py-3 rounded-xl font-bold shadow-md hover:bg-slate-800 transition-colors">Acceder</button>
+            <p id="pinError" class="text-rose-500 text-sm mt-3 font-medium hidden">PIN incorrecto</p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-brand-bg dark:bg-slate-900 z-50 flex items-center justify-center transition-opacity duration-500 no-print">
         <div class="flex flex-col items-center">
-            <div class="w-12 h-12 border-4 border-brand-accent/30 border-t-brand-dark rounded-full animate-spin"></div>
+            <div class="w-12 h-12 border-4 border-brand-accent/30 border-t-brand-dark dark:border-t-white rounded-full animate-spin"></div>
             <p class="mt-5 text-brand-accent text-sm font-bold tracking-widest uppercase">Cargando Datos</p>
         </div>
     </div>
 
-    <div id="errorOverlay" class="hidden fixed inset-0 bg-brand-bg/95 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print">
-        <div class="bg-white border border-rose-200 rounded-2xl p-8 max-w-md w-full text-center shadow-xl">
-            <h2 class="text-xl font-bold text-brand-dark mb-2">Error de Conexión</h2>
+    <!-- Error Overlay -->
+    <div id="errorOverlay" class="hidden fixed inset-0 bg-brand-bg/95 dark:bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print">
+        <div class="bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-900/50 rounded-2xl p-8 max-w-md w-full text-center shadow-xl">
+            <h2 class="text-xl font-bold text-brand-dark dark:text-white mb-2">Error de Conexión</h2>
             <p id="errorMessage" class="text-brand-accent text-sm mb-8 leading-relaxed">No se pudo acceder al origen de datos.</p>
-            <button onclick="location.reload()" class="bg-brand-dark text-white px-8 py-2.5 rounded-full font-medium text-sm hover:bg-slate-800 transition-colors shadow-md">
+            <button onclick="location.reload()" class="bg-brand-dark dark:bg-slate-700 text-white px-8 py-2.5 rounded-full font-medium text-sm hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors shadow-md">
                 Reintentar
             </button>
         </div>
@@ -96,42 +114,63 @@
         
         <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6 border-b border-brand-accent/20 pb-6">
-            <div>
-                <h1 id="dashboardTitle" class="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark mb-2">Ops Dining</h1>
-                <p class="text-brand-accent text-sm md:text-base font-semibold tracking-wide uppercase">Centro de Reservas</p>
+            <div class="flex justify-between w-full md:w-auto items-start">
+                <div>
+                    <h1 id="dashboardTitle" class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Ops Dining</h1>
+                    <p class="text-brand-accent text-sm md:text-base font-semibold tracking-wide uppercase">Centro de Reservas</p>
+                </div>
+                <!-- Dark Mode Mobile Toggle -->
+                <button onclick="toggleDarkMode()" class="md:hidden p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                    <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </button>
             </div>
             
             <div class="flex flex-col md:items-end gap-3 w-full md:w-auto">
-                <div class="flex flex-col sm:flex-row items-center gap-2 text-sm bg-white border border-brand-accent/20 rounded-lg p-1.5 shadow-sm no-print w-full sm:w-auto">
-                    <div class="flex items-center gap-2">
-                        <span class="text-brand-accent text-xs font-bold uppercase ml-2">Del</span>
-                        <input type="date" id="filterDesde" class="px-2 py-1.5 text-brand-dark bg-transparent outline-none font-medium cursor-pointer">
+                <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto no-print">
+                    <!-- Buscador -->
+                    <div class="relative w-full sm:w-auto">
+                        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="searchInput" placeholder="Buscar cliente o tfno..." class="w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-lg outline-none focus:border-brand-dark dark:focus:border-brand-accent text-brand-dark dark:text-white transition-colors placeholder:text-slate-400">
                     </div>
-                    <span class="text-brand-accent hidden sm:inline">-</span>
-                    <div class="flex items-center gap-2">
-                        <span class="text-brand-accent text-xs font-bold uppercase sm:hidden">Al</span>
-                        <input type="date" id="filterHasta" class="px-2 py-1.5 text-brand-dark bg-transparent outline-none font-medium cursor-pointer">
-                    </div>
-                    <div class="flex items-center gap-1 w-full sm:w-auto mt-2 sm:mt-0">
-                        <button onclick="applyFilters()" class="w-full sm:w-auto bg-brand-bg hover:bg-slate-200 text-brand-dark px-4 py-1.5 rounded-md font-bold transition-colors">Filtrar</button>
-                        <button onclick="clearFilters()" class="w-full sm:w-auto text-brand-accent hover:text-rose-500 hover:bg-rose-50 px-3 py-1.5 rounded-md transition-colors font-bold">✕ Limpiar</button>
+
+                    <!-- Filtros Fecha -->
+                    <div class="flex items-center gap-2 text-sm bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-lg p-1.5 shadow-sm w-full sm:w-auto">
+                        <div class="flex items-center gap-2">
+                            <span class="text-brand-accent text-xs font-bold uppercase ml-2">Del</span>
+                            <input type="date" id="filterDesde" class="px-2 py-1 bg-transparent outline-none font-medium cursor-pointer dark:[color-scheme:dark]">
+                        </div>
+                        <span class="text-brand-accent hidden sm:inline">-</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-brand-accent text-xs font-bold uppercase sm:hidden">Al</span>
+                            <input type="date" id="filterHasta" class="px-2 py-1 bg-transparent outline-none font-medium cursor-pointer dark:[color-scheme:dark]">
+                        </div>
+                        <div class="flex items-center gap-1 w-full sm:w-auto mt-2 sm:mt-0">
+                            <button onclick="applyFiltersAndRender()" class="w-full sm:w-auto bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 px-3 py-1 rounded-md font-bold transition-colors">Filtrar</button>
+                            <button onclick="clearFilters()" class="w-full sm:w-auto text-brand-accent hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 px-2 py-1 rounded-md transition-colors font-bold">✕</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between sm:justify-end gap-2 w-full">
-                    <div class="text-sm font-semibold text-brand-accent capitalize hidden sm:block" id="currentDate"></div>
+                <div class="flex items-center justify-between sm:justify-end gap-3 w-full">
+                    <div class="text-sm font-semibold text-brand-accent capitalize hidden md:block" id="currentDate"></div>
                     
-                    <button onclick="window.print()" title="Exportar a PDF" class="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-dark text-white rounded-full shadow-sm hover:bg-slate-800 transition-colors no-print">
+                    <button onclick="toggleDarkMode()" class="hidden md:flex p-1.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors no-print" title="Alternar modo oscuro">
+                        <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+
+                    <button onclick="window.print()" title="Exportar a PDF" class="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-dark dark:bg-slate-700 text-white rounded-full shadow-sm hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors no-print">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        <span class="text-xs font-bold uppercase hidden sm:inline">PDF / Print</span>
+                        <span class="text-xs font-bold uppercase hidden sm:inline">PDF</span>
                     </button>
                     
-                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white border border-brand-accent/30 rounded-full shadow-sm no-print">
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-full shadow-sm no-print">
                         <span class="relative flex h-2.5 w-2.5">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-40"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                         </span>
-                        <span class="text-xs font-bold tracking-wide text-brand-dark uppercase">Live</span>
+                        <span class="text-xs font-bold tracking-wide uppercase">Live</span>
                     </div>
                 </div>
             </div>
@@ -139,35 +178,35 @@
 
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 break-avoid">
-            <div class="bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
                 <h3 class="text-sm font-bold text-brand-accent">Total Reservas <span id="kpiLabel">(Filtrado)</span></h3>
                 <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold text-brand-dark tracking-tight" id="kpiMonthRes">0</p>
+                    <p class="text-4xl font-extrabold tracking-tight" id="kpiMonthRes">0</p>
                     <span class="text-xs text-brand-accent font-semibold">registros</span>
                 </div>
             </div>
             
-            <div class="bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
                 <h3 class="text-sm font-bold text-brand-accent">Volumen de Comensales</h3>
                 <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold text-brand-dark tracking-tight" id="kpiTotalPax">0</p>
+                    <p class="text-4xl font-extrabold tracking-tight" id="kpiTotalPax">0</p>
                     <span class="text-xs text-brand-accent font-semibold">personas</span>
                 </div>
             </div>
             
-            <div class="bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
                 <h3 class="text-sm font-bold text-brand-accent">Tasa de Cancelación</h3>
                 <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold text-brand-dark tracking-tight" id="kpiCancelRate">0%</p>
+                    <p class="text-4xl font-extrabold tracking-tight" id="kpiCancelRate">0%</p>
                     <span class="text-xs text-brand-accent font-semibold">sobre reservas</span>
                 </div>
             </div>
             
-            <div class="bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 rounded-bl-[100%] no-print"></div>
-                <h3 class="text-sm font-bold text-brand-dark">Servicios para Hoy</h3>
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 dark:bg-white/5 rounded-bl-[100%] no-print"></div>
+                <h3 class="text-sm font-bold">Servicios para Hoy</h3>
                 <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold text-brand-dark tracking-tight" id="kpiTodayRes">0</p>
+                    <p class="text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="kpiTodayRes">0</p>
                     <span class="text-xs text-brand-accent font-semibold">hoy</span>
                 </div>
             </div>
@@ -175,16 +214,16 @@
 
         <!-- Charts Section (Hidden in print) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 no-print break-avoid">
-            <div class="lg:col-span-2 bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
+            <div class="lg:col-span-2 bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-base font-bold text-brand-dark">Evolución Diaria (Comensales)</h3>
+                    <h3 class="text-base font-bold">Evolución Diaria (Comensales)</h3>
                 </div>
                 <div class="relative h-[280px] w-full">
                     <canvas id="lineChart"></canvas>
                 </div>
             </div>
-            <div class="bg-white border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
-                <h3 class="text-base font-bold text-brand-dark mb-6">Distribución Operativa</h3>
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
+                <h3 class="text-base font-bold mb-6">Distribución Operativa</h3>
                 <div class="relative flex-1 w-full min-h-[220px] flex items-center justify-center">
                     <canvas id="doughnutChart"></canvas>
                 </div>
@@ -192,28 +231,29 @@
         </div>
 
         <!-- Operative Control Table -->
-        <div class="bg-white border border-brand-accent/20 rounded-2xl overflow-hidden shadow-sm print-border break-avoid">
-            <div class="p-4 md:p-6 border-b border-brand-accent/20 flex justify-between items-center bg-brand-bg/50">
-                <h3 class="text-base font-bold text-brand-dark">Control de Servicios <span id="tableLabel" class="text-sm font-medium text-brand-accent ml-2"></span></h3>
+        <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl overflow-hidden shadow-sm print-border break-avoid">
+            <div class="p-4 md:p-6 border-b border-brand-accent/20 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-bg/50 dark:bg-slate-900/50 gap-2">
+                <h3 class="text-base font-bold">Control de Servicios <span id="tableLabel" class="text-sm font-medium text-brand-accent ml-2"></span></h3>
+                <span id="webhookStatus" class="text-xs font-medium text-brand-accent px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hidden no-print">Guardando...</span>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-brand-dark">
-                    <thead class="bg-brand-bg text-brand-accent font-bold border-b border-brand-accent/20">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-brand-bg dark:bg-slate-900/80 text-brand-accent font-bold border-b border-brand-accent/20">
                         <tr>
                             <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Fecha/Hora</th>
                             <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Cliente</th>
                             <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Pax</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Contacto / Acciones</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Estado</th>
+                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Contacto</th>
+                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Estado / Gestión en Vivo</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" class="divide-y divide-brand-accent/10">
+                    <tbody id="tableBody" class="divide-y divide-brand-accent/10 dark:divide-brand-accent/5">
                         <!-- Dynamic Rows Injected Here -->
                     </tbody>
                 </table>
             </div>
             <div id="emptyTableMessage" class="hidden p-8 text-center text-brand-accent text-sm font-medium">
-                No hay servicios para mostrar en este rango.
+                No hay resultados para mostrar.
             </div>
         </div>
 
@@ -226,11 +266,17 @@
          * =====================================================================
          */
         
-        // 1. Nombre del Restaurante (Aparecerá en el título grande)
+        // 1. Nombre del Restaurante
         const NOMBRE_RESTAURANTE = "Ops Dining";
 
         // 2. ID del Excel de este cliente
         const SHEET_ID = "12qHrqtzJMMRMc7ziKJVPbTjJiQY7rCOA9mZ4u28y3ZE";
+
+        // 3. PIN de Seguridad (Muro de acceso). Deja vacío "" para deshabilitar.
+        const PIN_ACCESO = ""; 
+
+        // 4. Webhook de actualización (Para botones de estado bidireccionales). Deja vacío "" para solo lectura.
+        const WEBHOOK_UPDATE_URL = "";
 
         /**
          * =====================================================================
@@ -239,52 +285,115 @@
          */
 
         const ESTADOS_MAP = {
-            "CONFIRMADA": { bg: "bg-emerald-100", text: "text-emerald-700", border: "border-emerald-200" },
-            "CANCELADA":  { bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-200" },
-            "PENDIENTE":  { bg: "bg-amber-100", text: "text-amber-700", border: "border-amber-200" },
-            "default":    { bg: "bg-slate-100", text: "text-slate-600", border: "border-slate-200" }
+            "CONFIRMADA": { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800" },
+            "SENTADO":    { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-400", border: "border-blue-200 dark:border-blue-800" },
+            "CANCELADA":  { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-700 dark:text-rose-400", border: "border-rose-200 dark:border-rose-800" },
+            "NO-SHOW":    { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-400", border: "border-purple-200 dark:border-purple-800" },
+            "PENDIENTE":  { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-400", border: "border-amber-200 dark:border-amber-800" },
+            "default":    { bg: "bg-slate-100 dark:bg-slate-800", text: "text-slate-600 dark:text-slate-300", border: "border-slate-200 dark:border-slate-700" }
         };
-
-        Chart.defaults.color = '#94A3B8';
-        Chart.defaults.font.family = 'Inter, sans-serif';
-        Chart.defaults.scale.grid.color = 'rgba(148, 163, 184, 0.15)';
 
         let lineChartInstance = null;
         let doughnutChartInstance = null;
         
-        // Almacenamiento Global
         let RAW_DATA = [];
         let ACTIVE_FILTER_START = null;
         let ACTIVE_FILTER_END = null;
         
-        // Control de alertas sonoras
         let isFirstLoad = true;
         let lastReservationsCount = 0;
 
-        /**
-         * Reproductor de Sonido nativo (Web Audio API)
-         */
+        // Búsqueda en tiempo real
+        document.getElementById('searchInput').addEventListener('input', applyFiltersAndRender);
+
+        // Verificación de PIN
+        function checkSecurity() {
+            if (PIN_ACCESO === "") return true; // Deshabilitado
+            if (sessionStorage.getItem('ops_pin_unlocked') === 'true') return true; // Ya desbloqueado
+            
+            document.getElementById('pinOverlay').classList.remove('hidden');
+            return false;
+        }
+
+        function verifyPin() {
+            const input = document.getElementById('pinInput').value;
+            if (input === PIN_ACCESO) {
+                sessionStorage.setItem('ops_pin_unlocked', 'true');
+                document.getElementById('pinOverlay').classList.add('hidden');
+                if (RAW_DATA.length === 0) initDashboard(); // Cargar datos si no se había hecho
+            } else {
+                document.getElementById('pinError').classList.remove('hidden');
+                setTimeout(() => document.getElementById('pinError').classList.add('hidden'), 3000);
+            }
+        }
+
+        // Dark Mode
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            if (RAW_DATA.length > 0) applyFiltersAndRender(); // Re-render charts
+        }
+
+        // Inicializar Dark Mode
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Alerta de audio
         function playAlertSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-                
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota A5 (Agudo y corporativo)
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.3); 
-                
                 gain.gain.setValueAtTime(0, ctx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.05);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-                
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                
                 osc.start(ctx.currentTime);
                 osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        // Webhook Bidireccional
+        async function updateRowStatus(fila, nombre, nuevoEstado) {
+            if (!WEBHOOK_UPDATE_URL) return; // Si no hay webhook, no hacer nada (no debería haber botón)
+            
+            const statusLabel = document.getElementById('webhookStatus');
+            statusLabel.classList.remove('hidden');
+            statusLabel.innerText = "Sincronizando...";
+
+            // Actualización local optimista
+            const rowTarget = RAW_DATA.find(r => r._rowIndex === fila);
+            if (rowTarget) {
+                rowTarget["Estado"] = nuevoEstado;
+                applyFiltersAndRender(); // Re-render rápido local
+            }
+
+            try {
+                const payload = { fila: fila, nombre: nombre, nuevo_estado: nuevoEstado, sheet_id: SHEET_ID };
+                await fetch(WEBHOOK_UPDATE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                statusLabel.innerText = "✓ Guardado";
+                setTimeout(() => statusLabel.classList.add('hidden'), 2000);
             } catch (e) {
-                console.warn('Audio de alerta no soportado en este navegador');
+                console.error("Error enviando webhook", e);
+                statusLabel.innerText = "❌ Error guardando";
+                setTimeout(() => statusLabel.classList.add('hidden'), 3000);
             }
         }
 
@@ -294,8 +403,8 @@
                 return;
             }
             const cols = json.table.cols.map(c => c ? c.label : "");
-            const data = json.table.rows.map(row => {
-                let obj = {};
+            const data = json.table.rows.map((row, index) => {
+                let obj = { _rowIndex: index + 2 }; // La fila 1 es cabecera, así que index 0 = fila 2 de sheets
                 row.c.forEach((cell, i) => {
                     if (cols[i]) {
                         obj[cols[i]] = cell ? (cell.f !== undefined ? cell.f : cell.v) : "";
@@ -306,10 +415,8 @@
             
             RAW_DATA = data;
             
-            // Comprobación de Alerta Sonora (Smart Sync)
             const validRows = data.filter(r => r["Fecha"] && r["Fecha"].trim() !== "");
             if (!isFirstLoad && validRows.length > lastReservationsCount) {
-                // Hay nuevas reservas en el excel
                 playAlertSound();
             }
             lastReservationsCount = validRows.length;
@@ -320,6 +427,7 @@
         };
 
         function fetchData() {
+            if (!checkSecurity()) return; // No descargar datos si el PIN no está puesto
             const oldScript = document.getElementById('gvizScript');
             if (oldScript) oldScript.remove();
 
@@ -327,63 +435,54 @@
             const script = document.createElement('script');
             script.id = 'gvizScript';
             script.src = gvizUrl;
-            script.onerror = function() {
-                console.error("No se pudo sincronizar datos en segundo plano.");
-            };
+            script.onerror = () => console.error("Fallo sincro fondo");
             document.body.appendChild(script);
         }
 
         async function initDashboard() {
             updateDateHeader();
+            if (NOMBRE_RESTAURANTE) {
+                document.getElementById('dashboardTitle').innerText = NOMBRE_RESTAURANTE;
+                document.title = NOMBRE_RESTAURANTE + " - Centro de Reservas";
+            }
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.getElementById('filterDesde').valueAsDate = firstDay;
+            document.getElementById('filterHasta').valueAsDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-            try {
-                if (NOMBRE_RESTAURANTE) {
-                    document.getElementById('dashboardTitle').innerText = NOMBRE_RESTAURANTE;
-                    document.title = NOMBRE_RESTAURANTE + " - Centro de Reservas";
-                }
-
-                // Configurar inputs de fecha por defecto (Mes actual)
-                const today = new Date();
-                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                document.getElementById('filterDesde').valueAsDate = firstDay;
-                document.getElementById('filterHasta').valueAsDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
+            if (checkSecurity()) {
                 fetchData();
                 setInterval(fetchData, 30000);
-
-            } catch (error) {
-                showError(error.message);
             }
         }
 
-        // Filtros de Rango
-        function applyFilters() {
+        function applyFiltersAndRender() {
             const fd = document.getElementById('filterDesde').value;
             const fh = document.getElementById('filterHasta').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
             ACTIVE_FILTER_START = fd ? new Date(fd) : null;
             ACTIVE_FILTER_END = fh ? new Date(fh) : null;
-            applyFiltersAndRender();
-        }
 
-        function clearFilters() {
-            document.getElementById('filterDesde').value = '';
-            document.getElementById('filterHasta').value = '';
-            ACTIVE_FILTER_START = null;
-            ACTIVE_FILTER_END = null;
-            applyFiltersAndRender();
-        }
-
-        function applyFiltersAndRender() {
             let filteredData = RAW_DATA.filter(row => row["Fecha"] && row["Fecha"].trim() !== "");
 
+            // Filtro de Texto (Buscador Vivo)
+            if (searchTerm) {
+                filteredData = filteredData.filter(row => {
+                    const nombre = (row["Nombre"] || "").toLowerCase();
+                    const tlf = (row["WhatsApp"] || "").toLowerCase();
+                    return nombre.includes(searchTerm) || tlf.includes(searchTerm);
+                });
+            }
+
+            // Filtro de Fechas
             if (ACTIVE_FILTER_START || ACTIVE_FILTER_END) {
-                document.getElementById('kpiLabel').innerText = "(En Rango)";
-                document.getElementById('tableLabel').innerText = "Viendo rango de fechas";
+                document.getElementById('kpiLabel').innerText = searchTerm ? "(Filtrado Búsqueda)" : "(En Rango)";
+                document.getElementById('tableLabel').innerText = "Aplicando filtros";
                 
                 filteredData = filteredData.filter(row => {
                     const d = parseDateString(row["Fecha"]);
                     if (d.getTime() === 0) return false;
-                    
                     let valid = true;
                     if (ACTIVE_FILTER_START) {
                         const start = new Date(ACTIVE_FILTER_START);
@@ -398,11 +497,18 @@
                     return valid;
                 });
             } else {
-                document.getElementById('kpiLabel').innerText = "(Histórico)";
-                document.getElementById('tableLabel').innerText = "Mostrando todas las fechas";
+                document.getElementById('kpiLabel').innerText = searchTerm ? "(Filtrado Búsqueda)" : "(Histórico)";
+                document.getElementById('tableLabel').innerText = searchTerm ? "Resultados de búsqueda" : "Todas las fechas";
             }
 
             processData(filteredData);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterDesde').value = '';
+            document.getElementById('filterHasta').value = '';
+            document.getElementById('searchInput').value = '';
+            applyFiltersAndRender();
         }
 
         function processData(data) {
@@ -411,7 +517,6 @@
             let totalComensales = 0;
             let totalCanceladas = 0;
             let serviciosHoy = 0;
-
             const comensalesPorDia = {};
             const estadosCount = {};
 
@@ -423,7 +528,7 @@
                 totalReservas++;
                 totalComensales += pax;
 
-                if (estadoRaw === 'CANCELADA') {
+                if (estadoRaw === 'CANCELADA' || estadoRaw === 'NO-SHOW') {
                     totalCanceladas++;
                 }
 
@@ -431,12 +536,10 @@
                     serviciosHoy++;
                 }
 
-                // Gráfico de líneas (Por fecha estricta)
                 const dateKey = `${rowDate.getFullYear()}-${String(rowDate.getMonth()+1).padStart(2, '0')}-${String(rowDate.getDate()).padStart(2, '0')}`;
                 if (!comensalesPorDia[dateKey]) comensalesPorDia[dateKey] = 0;
                 comensalesPorDia[dateKey] += pax;
 
-                // Anillo
                 if (!estadosCount[estadoRaw]) estadosCount[estadoRaw] = 0;
                 estadosCount[estadoRaw]++;
             });
@@ -453,18 +556,20 @@
         }
 
         function renderCharts(comensalesPorDia, estadosCount) {
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(148, 163, 184, 0.15)';
+            const textColor = isDark ? '#94A3B8' : '#64748b';
+            const tooltipBg = isDark ? '#1E293B' : '#0F172A';
+            const lineColor = isDark ? '#38BDF8' : '#0F172A';
+
             const ctxLine = document.getElementById('lineChart').getContext('2d');
             const sortedDates = Object.keys(comensalesPorDia).sort((a, b) => new Date(a) - new Date(b)).slice(-14);
-            
-            const lineLabels = sortedDates.map(dateStr => {
-                const d = new Date(dateStr);
-                return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-            });
-            const lineData = sortedDates.map(date => comensalesPorDia[date]);
+            const lineLabels = sortedDates.map(d => new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }));
+            const lineData = sortedDates.map(d => comensalesPorDia[d]);
 
             const gradient = ctxLine.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(15, 23, 42, 0.15)');
-            gradient.addColorStop(1, 'rgba(15, 23, 42, 0)');
+            gradient.addColorStop(0, isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(15, 23, 42, 0.15)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
             if (lineChartInstance) lineChartInstance.destroy();
             lineChartInstance = new Chart(ctxLine, {
@@ -472,37 +577,30 @@
                 data: {
                     labels: lineLabels,
                     datasets: [{
-                        label: 'Comensales',
-                        data: lineData,
-                        borderColor: '#0F172A',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
-                        pointBackgroundColor: '#FFFFFF',
-                        pointBorderColor: '#0F172A',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        fill: true,
-                        tension: 0.4
+                        label: 'Comensales', data: lineData,
+                        borderColor: lineColor, backgroundColor: gradient, borderWidth: 3,
+                        pointBackgroundColor: isDark ? '#0F172A' : '#FFFFFF', pointBorderColor: lineColor,
+                        pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, fill: true, tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0F172A', titleColor: '#FFFFFF', bodyColor: '#F8FAFC', padding: 12, cornerRadius: 8 } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, padding: 12, cornerRadius: 8 } },
                     scales: {
-                        y: { beginAtZero: true, border: { display: false } },
-                        x: { grid: { display: false }, border: { display: false } }
+                        y: { beginAtZero: true, border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } },
+                        x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor } }
                     }
                 }
             });
 
             const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-            const doughnutLabels = Object.keys(estadosCount);
-            const doughnutData = Object.values(estadosCount);
+            const dLabels = Object.keys(estadosCount);
+            const dData = Object.values(estadosCount);
 
-            const bgColors = doughnutLabels.map(label => {
+            const bgColors = dLabels.map(label => {
                 if(label === "CONFIRMADA") return '#10b981';
-                if(label === "CANCELADA") return '#f43f5e';
+                if(label === "SENTADO") return '#3b82f6';
+                if(label === "CANCELADA" || label === "NO-SHOW") return '#f43f5e';
                 if(label === "PENDIENTE") return '#f59e0b';
                 return '#94A3B8';
             });
@@ -510,12 +608,12 @@
             if (doughnutChartInstance) doughnutChartInstance.destroy();
             doughnutChartInstance = new Chart(ctxDoughnut, {
                 type: 'doughnut',
-                data: { labels: doughnutLabels, datasets: [{ data: doughnutData, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 6 }] },
+                data: { labels: dLabels, datasets: [{ data: dData, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 6 }] },
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '75%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle', font: { family: 'Inter', size: 12, weight: '600' }, color: '#0F172A' } },
-                        tooltip: { backgroundColor: '#0F172A', titleColor: '#FFFFFF', bodyColor: '#F8FAFC', padding: 12, cornerRadius: 8 }
+                        legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle', color: textColor, font: { family: 'Inter', size: 12 } } },
+                        tooltip: { backgroundColor: tooltipBg, padding: 12, cornerRadius: 8 }
                     }
                 }
             });
@@ -527,69 +625,70 @@
             tbody.innerHTML = '';
 
             if(data.length === 0) {
-                emptyMsg.classList.remove('hidden');
-                return;
+                emptyMsg.classList.remove('hidden'); return;
             } else {
                 emptyMsg.classList.add('hidden');
             }
 
             const sorted = data.sort((a, b) => {
-                const dateA = parseDateString(a["Fecha"]);
-                const dateB = parseDateString(b["Fecha"]);
-                if (dateB - dateA !== 0) return dateB - dateA;
-                const horaA = a["Hora"] || "00:00";
-                const horaB = b["Hora"] || "00:00";
-                return horaB.localeCompare(horaA);
-            }); // Sin slice, imprimimos todas en el rango filtrado
+                const dA = parseDateString(a["Fecha"]);
+                const dB = parseDateString(b["Fecha"]);
+                if (dB - dA !== 0) return dB - dA;
+                return (b["Hora"]||"00:00").localeCompare(a["Hora"]||"00:00");
+            });
 
             sorted.forEach(row => {
                 const estadoRaw = row["Estado"] ? row["Estado"].trim().toUpperCase() : "DESCONOCIDO";
                 const estadoObj = ESTADOS_MAP[estadoRaw] || ESTADOS_MAP["default"];
-                const nombre = row["Nombre"] ? row["Nombre"].trim() : "Cliente sin registrar";
+                const nombre = row["Nombre"] ? row["Nombre"].trim() : "Cliente";
+                const rowIndex = row._rowIndex;
                 
-                // Preparar WhatsApp Link
+                // Formato WhatsApp
                 const waRaw = row["WhatsApp"] ? row["WhatsApp"].trim() : "";
                 const waNum = waRaw.replace(/\D/g, '');
                 let waHtml = `<span class="text-brand-accent text-xs">-</span>`;
                 
                 if (waNum.length >= 8) {
-                    const waFinal = waNum.startsWith("34") ? waNum : "34" + waNum; // Asume prefijo España por defecto
+                    const waFinal = waNum.startsWith("34") ? waNum : "34" + waNum;
                     waHtml = `
                         <div class="flex items-center gap-2">
-                            <span class="text-brand-dark font-medium ">${waRaw}</span>
-                            <a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] hover:bg-[#25D366]/20 px-2.5 py-1.5 rounded-md transition-colors font-bold text-xs border border-[#25D366]/20">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.082 21.083c-1.585 0-3.11-.408-4.461-1.183l-4.959 1.302 1.325-4.834c-.841-1.404-1.285-3.031-1.285-4.697 0-5.186 4.223-9.409 9.41-9.409 5.187 0 9.41 4.223 9.41 9.409 0 5.186-4.223 9.409-9.41 9.409z"/></svg>
-                                Enviar WA
-                            </a>
+                            <span class="font-medium">${waRaw}</span>
+                            <a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a>
+                        </div>
+                    `;
+                }
+
+                // Generar Botones Webhook si está configurado
+                let statusHtml = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>`;
+                
+                if (WEBHOOK_UPDATE_URL) {
+                    statusHtml = `
+                        <div class="flex flex-col gap-2">
+                            ${statusHtml}
+                            <div class="flex items-center gap-1 no-print">
+                                <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2 py-1 text-[9px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded border border-blue-200 dark:border-blue-800 transition-colors">SENTAR</button>
+                                <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2 py-1 text-[9px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded border border-rose-200 dark:border-rose-800 transition-colors">NO-SHOW</button>
+                            </div>
                         </div>
                     `;
                 }
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-brand-bg transition-colors group";
+                tr.className = "hover:bg-brand-bg dark:hover:bg-slate-800/50 transition-colors";
                 
                 tr.innerHTML = `
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        <div class="text-brand-dark font-bold mb-0.5">${row["Fecha"]}</div>
+                        <div class="font-bold mb-0.5">${row["Fecha"]}</div>
                         <div class="text-xs text-brand-accent font-semibold">${row["Hora"] || '--:--'}</div>
                     </td>
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        <div class="text-brand-dark font-semibold">${nombre}</div>
-                    </td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap font-semibold">${nombre}</td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-brand-accent no-print" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <span class="text-brand-dark font-bold">${row["Personas"] || 0}</span>
+                            <span class="font-bold">${row["Personas"] || 0}</span>
                         </div>
                     </td>
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        ${waHtml}
-                    </td>
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">
-                            ${estadoRaw}
-                        </span>
-                    </td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">${waHtml}</td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">${statusHtml}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -598,16 +697,15 @@
         function parseDateString(dateStr) {
             if(!dateStr) return new Date(0);
             if(dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                if(parts.length === 3) return new Date(parts[2], parts[1]-1, parts[0]);
+                const p = dateStr.split('/');
+                if(p.length === 3) return new Date(p[2], p[1]-1, p[0]);
             }
             const d = new Date(dateStr);
             return isNaN(d.getTime()) ? new Date(0) : d;
         }
 
         function updateDateHeader() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('es-ES', options);
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         }
 
         function hideLoading() {
@@ -620,14 +718,12 @@
                 }, 500);
             }
         }
-
         function showError(msg) {
             document.getElementById('loadingOverlay')?.classList.add('hidden');
             document.getElementById('dashboardContent')?.classList.add('hidden');
             document.getElementById('errorMessage').innerText = msg;
             document.getElementById('errorOverlay').classList.remove('hidden');
         }
-
         document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
