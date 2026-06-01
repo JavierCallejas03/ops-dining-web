@@ -16,7 +16,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,7 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
                     colors: {
                         brand: {
                             dark: '#0F172A',
@@ -43,7 +43,7 @@
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -255,9 +255,9 @@
                             <tr>
                                 <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Fecha/Hora</th>
                                 <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Cliente</th>
-                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Pax</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider text-center">Comensales</th>
                                 <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Contacto</th>
-                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Estado / Gestión</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider text-center">Estado / Gestión</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody" class="divide-y divide-brand-accent/10 dark:divide-brand-accent/5"></tbody>
@@ -677,8 +677,8 @@
             if (lineChartInstance) lineChartInstance.destroy();
             lineChartInstance = new Chart(ctxLine, {
                 type: 'line',
-                data: { labels: lineLabels, datasets: [{ label: 'Comensales', data: lineData, borderColor: isDark?'#38BDF8':'#0F172A', backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: isDark?'#0F172A':'#FFFFFF', pointBorderWidth: 2, fill: true, tension: 0.4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8 } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor } } } }
+                data: { labels: lineLabels, datasets: [{ label: 'Comensales', data: lineData, borderColor: isDark?'#38BDF8':'#0F172A', backgroundColor: gradient, borderWidth: 4, pointBackgroundColor: isDark?'#0F172A':'#FFFFFF', pointBorderWidth: 3, pointRadius: 5, fill: true, tension: 0.5 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } } } }
             });
 
             // CHART 2: DOUGHNUT
@@ -696,8 +696,8 @@
             if (doughnutChartInstance) doughnutChartInstance.destroy();
             doughnutChartInstance = new Chart(ctxDoughnut, {
                 type: 'doughnut',
-                data: { labels: dLabels, datasets: [{ data: dData, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 6 }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, color: textColor } }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8 } } }
+                data: { labels: dLabels, datasets: [{ data: dData, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 8, borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, color: textColor, font: { family: 'Outfit', size: 13, weight: '500' } } }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } } }
             });
 
             // CHART 3: BAR (HORAS)
@@ -707,8 +707,8 @@
             if (barHourChartInstance) barHourChartInstance.destroy();
             barHourChartInstance = new Chart(ctxHour, {
                 type: 'bar',
-                data: { labels: hKeys, datasets: [{ label: 'Pax por Hora', data: hData, backgroundColor: isDark?'rgba(56, 189, 248, 0.8)':'rgba(15, 23, 42, 0.8)', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, x: { grid: { display: false }, ticks: { color: textColor } } } }
+                data: { labels: hKeys, datasets: [{ label: 'Pax por Hora', data: hData, backgroundColor: isDark?'rgba(56, 189, 248, 0.85)':'rgba(15, 23, 42, 0.85)', borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } }, x: { grid: { display: false }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } } } }
             });
 
             // CHART 4: BAR (SIZE)
@@ -718,8 +718,8 @@
             if (barSizeChartInstance) barSizeChartInstance.destroy();
             barSizeChartInstance = new Chart(ctxSize, {
                 type: 'bar',
-                data: { labels: sKeys, datasets: [{ label: 'Mesas', data: sData, backgroundColor: '#10b981', borderRadius: 4 }] },
-                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg } }, scales: { x: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, y: { grid: { display: false }, ticks: { color: textColor } } } }
+                data: { labels: sKeys, datasets: [{ label: 'Mesas', data: sData, backgroundColor: '#10b981', borderRadius: 6 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } }, scales: { x: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } }, y: { grid: { display: false }, ticks: { color: textColor, font: { family: 'Outfit', size: 12 } } } } }
             });
         }
 
@@ -750,12 +750,15 @@
                     waHtml = `<div class="flex items-center gap-2"><span class="font-medium">${waRaw}</span><a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a></div>`;
                 }
 
-                let statusHtml = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>`;
+                let statusHtml = `<div class="flex items-center justify-center w-full"><span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span></div>`;
                 if (WEBHOOK_UPDATE_URL) {
-                    statusHtml = `<div class="flex flex-col gap-2">${statusHtml}<div class="flex items-center gap-1 no-print">
-                        <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2 py-1 text-[9px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded border border-blue-200 dark:border-blue-800 transition-colors">SENTAR</button>
-                        <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2 py-1 text-[9px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded border border-rose-200 dark:border-rose-800 transition-colors">NO-SHOW</button>
-                    </div></div>`;
+                    statusHtml = `<div class="flex flex-col items-center justify-center gap-2.5 w-full">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>
+                        <div class="flex justify-center gap-1.5 no-print">
+                            <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2.5 py-1.5 text-[10px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded-lg border border-blue-200 dark:border-blue-800 transition-all hover:scale-105 active:scale-95 shadow-sm">SENTAR</button>
+                            <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2.5 py-1.5 text-[10px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded-lg border border-rose-200 dark:border-rose-800 transition-all hover:scale-105 active:scale-95 shadow-sm">NO-SHOW</button>
+                        </div>
+                    </div>`;
                 }
 
                 const tr = document.createElement('tr');
@@ -763,7 +766,7 @@
                 tr.innerHTML = `
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap"><div class="font-bold mb-0.5">${row["Fecha"]}</div><div class="text-xs text-brand-accent font-semibold">${row["Hora"] || '--:--'}</div></td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap font-semibold">${nombre}</td>
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap"><div class="flex items-center gap-2"><span class="font-bold">${row["Personas"] || 0}</span></div></td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap text-center"><div class="flex items-center justify-center gap-2"><span class="font-bold">${row["Personas"] || 0}</span></div></td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">${waHtml}</td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">${statusHtml}</td>
                 `;
