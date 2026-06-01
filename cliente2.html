@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon-192x192.png">
 
-    <title>Ops Dining - Centro de Reservas</title>
+    <title>Ops Dining - Centro de Reservas V4</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,9 +28,9 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: {
-                            dark: '#0F172A',   // Azul Medianoche Profundo
-                            accent: '#94A3B8', // Gris Titanio
-                            bg: '#F8FAFC',     // Gris Titanio Claro / Off-White
+                            dark: '#0F172A',
+                            accent: '#94A3B8',
+                            bg: '#F8FAFC',
                         }
                     }
                 }
@@ -54,10 +54,20 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid #0F172A;
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .dark .tab-btn.active {
+            border-bottom-color: #FFFFFF;
+            color: #FFFFFF;
         }
 
         /* Print Media Queries */
@@ -70,27 +80,26 @@
             table { width: 100%; border-collapse: collapse; }
             th, td { border-bottom: 1px solid #ccc; padding: 6px; font-size: 11px; }
             .break-avoid { page-break-inside: avoid; }
+            .tab-content { display: block !important; } /* Imprimir todas las pestañas */
         }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 xl:px-12 bg-brand-bg text-brand-dark dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
 
-    <!-- OVERLAYS -->
-    <!-- PIN Overlay -->
+    <!-- OVERLAYS (PIN, Loading, Error) -->
     <div id="pinOverlay" class="fixed inset-0 bg-brand-bg dark:bg-slate-900 z-[100] flex items-center justify-center transition-opacity duration-500 hidden no-print">
         <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-8 max-w-sm w-full text-center shadow-xl">
             <div class="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg class="w-8 h-8 text-brand-dark dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
             <h2 class="text-xl font-bold mb-2">Acceso Restringido</h2>
-            <p class="text-brand-accent text-sm mb-6">Introduce el PIN de gerente para acceder al Centro de Reservas.</p>
+            <p class="text-brand-accent text-sm mb-6">Introduce el PIN de gerente.</p>
             <input type="password" id="pinInput" maxlength="4" placeholder="••••" class="w-full text-center text-3xl tracking-[1em] font-bold py-3 bg-slate-50 dark:bg-slate-900 border border-brand-accent/30 rounded-lg mb-4 outline-none focus:border-brand-dark dark:focus:border-brand-accent transition-colors">
             <button onclick="verifyPin()" class="w-full bg-brand-dark text-white py-3 rounded-xl font-bold shadow-md hover:bg-slate-800 transition-colors">Acceder</button>
             <p id="pinError" class="text-rose-500 text-sm mt-3 font-medium hidden">PIN incorrecto</p>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-brand-bg dark:bg-slate-900 z-50 flex items-center justify-center transition-opacity duration-500 no-print">
         <div class="flex flex-col items-center">
             <div class="w-12 h-12 border-4 border-brand-accent/30 border-t-brand-dark dark:border-t-white rounded-full animate-spin"></div>
@@ -98,14 +107,11 @@
         </div>
     </div>
 
-    <!-- Error Overlay -->
     <div id="errorOverlay" class="hidden fixed inset-0 bg-brand-bg/95 dark:bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-900/50 rounded-2xl p-8 max-w-md w-full text-center shadow-xl">
             <h2 class="text-xl font-bold text-brand-dark dark:text-white mb-2">Error de Conexión</h2>
-            <p id="errorMessage" class="text-brand-accent text-sm mb-8 leading-relaxed">No se pudo acceder al origen de datos.</p>
-            <button onclick="location.reload()" class="bg-brand-dark dark:bg-slate-700 text-white px-8 py-2.5 rounded-full font-medium text-sm hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors shadow-md">
-                Reintentar
-            </button>
+            <p id="errorMessage" class="text-brand-accent text-sm mb-8">No se pudo acceder al origen de datos.</p>
+            <button onclick="location.reload()" class="bg-brand-dark text-white px-8 py-2.5 rounded-full font-medium text-sm hover:bg-slate-800 transition-colors shadow-md">Reintentar</button>
         </div>
     </div>
 
@@ -113,11 +119,11 @@
     <div id="dashboardContent" class="max-w-[1600px] mx-auto hidden fade-in">
         
         <!-- Header -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6 border-b border-brand-accent/20 pb-6">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4">
             <div class="flex justify-between w-full md:w-auto items-start">
                 <div>
-                    <h1 id="dashboardTitle" class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Ops Dining</h1>
-                    <p class="text-brand-accent text-sm md:text-base font-semibold tracking-wide uppercase">Centro de Reservas</p>
+                    <h1 id="dashboardTitle" class="text-3xl md:text-4xl font-extrabold tracking-tight mb-1">Ops Dining</h1>
+                    <p class="text-brand-accent text-sm font-semibold tracking-wide uppercase">Centro de Mando</p>
                 </div>
                 <!-- Dark Mode Mobile Toggle -->
                 <button onclick="toggleDarkMode()" class="md:hidden p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
@@ -131,7 +137,7 @@
                     <!-- Buscador -->
                     <div class="relative w-full sm:w-auto">
                         <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" id="searchInput" placeholder="Buscar cliente o tfno..." class="w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-lg outline-none focus:border-brand-dark dark:focus:border-brand-accent text-brand-dark dark:text-white transition-colors placeholder:text-slate-400">
+                        <input type="text" id="searchInput" placeholder="Buscar cliente o tfno..." class="w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-lg outline-none focus:border-brand-dark dark:focus:border-brand-accent text-brand-dark dark:text-white transition-colors">
                     </div>
 
                     <!-- Filtros Fecha -->
@@ -153,18 +159,14 @@
                 </div>
 
                 <div class="flex items-center justify-between sm:justify-end gap-3 w-full">
-                    <div class="text-sm font-semibold text-brand-accent capitalize hidden md:block" id="currentDate"></div>
-                    
                     <button onclick="toggleDarkMode()" class="hidden md:flex p-1.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors no-print" title="Alternar modo oscuro">
                         <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                         <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     </button>
-
                     <button onclick="window.print()" title="Exportar a PDF" class="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-dark dark:bg-slate-700 text-white rounded-full shadow-sm hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors no-print">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         <span class="text-xs font-bold uppercase hidden sm:inline">PDF</span>
                     </button>
-                    
                     <div class="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-full shadow-sm no-print">
                         <span class="relative flex h-2.5 w-2.5">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-40"></span>
@@ -176,84 +178,140 @@
             </div>
         </header>
 
-        <!-- KPI Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 break-avoid">
-            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
-                <h3 class="text-sm font-bold text-brand-accent">Total Reservas <span id="kpiLabel">(Filtrado)</span></h3>
-                <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold tracking-tight" id="kpiMonthRes">0</p>
-                    <span class="text-xs text-brand-accent font-semibold">registros</span>
+        <!-- TABS NAVIGATION -->
+        <nav class="flex border-b border-brand-accent/20 mb-6 no-print overflow-x-auto">
+            <button onclick="switchTab('tab-operativa')" id="btn-tab-operativa" class="tab-btn active px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
+                1. Control Operativo
+            </button>
+            <button onclick="switchTab('tab-crm')" id="btn-tab-crm" class="tab-btn px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
+                2. CRM Clientes VIP
+            </button>
+            <button onclick="switchTab('tab-analytics')" id="btn-tab-analytics" class="tab-btn px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
+                3. Analítica Avanzada
+            </button>
+        </nav>
+
+        <!-- ============================================== -->
+        <!-- TAB 1: OPERATIVA -->
+        <!-- ============================================== -->
+        <div id="tab-operativa" class="tab-content fade-in">
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 break-avoid">
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+                    <h3 class="text-sm font-bold text-brand-accent">Total Reservas <span id="kpiLabel">(Filtrado)</span></h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <p class="text-4xl font-extrabold tracking-tight" id="kpiMonthRes">0</p>
+                        <span class="text-xs text-brand-accent font-semibold">registros</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+                    <h3 class="text-sm font-bold text-brand-accent">Volumen de Comensales</h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <p class="text-4xl font-extrabold tracking-tight" id="kpiTotalPax">0</p>
+                        <span class="text-xs text-brand-accent font-semibold">personas</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+                    <h3 class="text-sm font-bold text-brand-accent">Tasa de Cancelación</h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <p class="text-4xl font-extrabold tracking-tight" id="kpiCancelRate">0%</p>
+                        <span class="text-xs text-brand-accent font-semibold">sobre reservas</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 dark:bg-white/5 rounded-bl-[100%] no-print"></div>
+                    <h3 class="text-sm font-bold">Servicios para Hoy</h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <p class="text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="kpiTodayRes">0</p>
+                        <span class="text-xs text-brand-accent font-semibold">hoy</span>
+                    </div>
                 </div>
             </div>
-            
-            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
-                <h3 class="text-sm font-bold text-brand-accent">Volumen de Comensales</h3>
-                <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold tracking-tight" id="kpiTotalPax">0</p>
-                    <span class="text-xs text-brand-accent font-semibold">personas</span>
+
+            <!-- Charts Section (Hidden in print) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 no-print break-avoid">
+                <div class="lg:col-span-2 bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-base font-bold mb-4">Evolución Diaria (Comensales)</h3>
+                    <div class="relative h-[250px] w-full"><canvas id="lineChart"></canvas></div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
+                    <h3 class="text-base font-bold mb-4">Distribución Operativa</h3>
+                    <div class="relative flex-1 w-full min-h-[200px] flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
                 </div>
             </div>
-            
-            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
-                <h3 class="text-sm font-bold text-brand-accent">Tasa de Cancelación</h3>
-                <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold tracking-tight" id="kpiCancelRate">0%</p>
-                    <span class="text-xs text-brand-accent font-semibold">sobre reservas</span>
+
+            <!-- Operative Control Table -->
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl overflow-hidden shadow-sm print-border break-avoid">
+                <div class="p-4 md:p-6 border-b border-brand-accent/20 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-bg/50 dark:bg-slate-900/50 gap-2">
+                    <h3 class="text-base font-bold">Control de Servicios <span id="tableLabel" class="text-sm font-medium text-brand-accent ml-2"></span></h3>
+                    <span id="webhookStatus" class="text-xs font-medium text-brand-accent px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hidden no-print">Guardando...</span>
                 </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-brand-bg dark:bg-slate-900/80 text-brand-accent font-bold border-b border-brand-accent/20">
+                            <tr>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Fecha/Hora</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Cliente</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Pax</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Contacto</th>
+                                <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Estado / Gestión</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-brand-accent/10 dark:divide-brand-accent/5"></tbody>
+                    </table>
+                </div>
+                <div id="emptyTableMessage" class="hidden p-8 text-center text-brand-accent text-sm font-medium">No hay resultados.</div>
             </div>
-            
-            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 dark:bg-white/5 rounded-bl-[100%] no-print"></div>
-                <h3 class="text-sm font-bold">Servicios para Hoy</h3>
-                <div class="mt-4 flex items-baseline gap-2">
-                    <p class="text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="kpiTodayRes">0</p>
-                    <span class="text-xs text-brand-accent font-semibold">hoy</span>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: CRM (VIP) -->
+        <!-- ============================================== -->
+        <div id="tab-crm" class="tab-content hidden fade-in">
+            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm mb-6">
+                <h2 class="text-xl font-bold mb-2">Cartera de Clientes Frecuentes (VIP)</h2>
+                <p class="text-sm text-brand-accent mb-6">Agrupación automática por número de teléfono. Descubre quiénes son los clientes que más facturación aportan a tu restaurante.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 dark:bg-slate-900/50 text-brand-accent font-bold border-b border-brand-accent/20">
+                            <tr>
+                                <th class="px-4 py-3 uppercase text-xs">Ranking</th>
+                                <th class="px-4 py-3 uppercase text-xs">Nombre Habitual</th>
+                                <th class="px-4 py-3 uppercase text-xs">Teléfono</th>
+                                <th class="px-4 py-3 uppercase text-xs">Total Visitas</th>
+                                <th class="px-4 py-3 uppercase text-xs">Histórico Pax</th>
+                                <th class="px-4 py-3 uppercase text-xs">Fiabilidad</th>
+                                <th class="px-4 py-3 uppercase text-xs">Última Visita</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crmTableBody" class="divide-y divide-brand-accent/10 dark:divide-brand-accent/5"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Section (Hidden in print) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 no-print break-avoid">
-            <div class="lg:col-span-2 bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-base font-bold">Evolución Diaria (Comensales)</h3>
+        <!-- ============================================== -->
+        <!-- TAB 3: ANALYTICS -->
+        <!-- ============================================== -->
+        <div id="tab-analytics" class="tab-content hidden fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Picos de Afluencia -->
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-base font-bold mb-1">Picos de Afluencia Horaria</h3>
+                    <p class="text-xs text-brand-accent mb-6">Mide a qué horas se concentra el volumen de clientes.</p>
+                    <div class="relative h-[300px] w-full"><canvas id="barHourChart"></canvas></div>
                 </div>
-                <div class="relative h-[280px] w-full">
-                    <canvas id="lineChart"></canvas>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
-                <h3 class="text-base font-bold mb-6">Distribución Operativa</h3>
-                <div class="relative flex-1 w-full min-h-[220px] flex items-center justify-center">
-                    <canvas id="doughnutChart"></canvas>
-                </div>
-            </div>
-        </div>
 
-        <!-- Operative Control Table -->
-        <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl overflow-hidden shadow-sm print-border break-avoid">
-            <div class="p-4 md:p-6 border-b border-brand-accent/20 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-bg/50 dark:bg-slate-900/50 gap-2">
-                <h3 class="text-base font-bold">Control de Servicios <span id="tableLabel" class="text-sm font-medium text-brand-accent ml-2"></span></h3>
-                <span id="webhookStatus" class="text-xs font-medium text-brand-accent px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hidden no-print">Guardando...</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-brand-bg dark:bg-slate-900/80 text-brand-accent font-bold border-b border-brand-accent/20">
-                        <tr>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Fecha/Hora</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Cliente</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Pax</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Contacto</th>
-                            <th class="px-4 md:px-6 py-3 uppercase text-[10px] md:text-xs tracking-wider">Estado / Gestión en Vivo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="divide-y divide-brand-accent/10 dark:divide-brand-accent/5">
-                        <!-- Dynamic Rows Injected Here -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="emptyTableMessage" class="hidden p-8 text-center text-brand-accent text-sm font-medium">
-                No hay resultados para mostrar.
+                <!-- Tamaño de Mesas -->
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-base font-bold mb-1">Distribución de Mesas (Pax)</h3>
+                    <p class="text-xs text-brand-accent mb-6">Descubre si predominan parejas, mesas de 4 o grupos grandes.</p>
+                    <div class="relative h-[300px] w-full"><canvas id="barSizeChart"></canvas></div>
+                </div>
             </div>
         </div>
 
@@ -262,27 +320,18 @@
     <script>
         /**
          * =====================================================================
-         * ⚙️ CONFIGURACIÓN DEL CLIENTE (MODIFICA ESTO PARA CADA RESTAURANTE)
+         * ⚙️ CONFIGURACIÓN DEL CLIENTE
          * =====================================================================
          */
-        
-        // 1. Nombre del Restaurante
         const NOMBRE_RESTAURANTE = "Ops Dining";
-
-        // 2. ID del Excel de este cliente
         const SHEET_ID = "12qHrqtzJMMRMc7ziKJVPbTjJiQY7rCOA9mZ4u28y3ZE";
-
-        // 3. PIN de Seguridad (Muro de acceso). Deja vacío "" para deshabilitar.
         const PIN_ACCESO = ""; 
-
-        // 4. Webhook de actualización (Para botones de estado bidireccionales). Deja vacío "" para solo lectura.
         const WEBHOOK_UPDATE_URL = "https://n8n.opsdining.com/webhook-test/update-estado";
+        
+        // 🔒 TOKEN DE SEGURIDAD (Evita ataques falsificando datos hacia n8n)
+        const WEBHOOK_SECRET = "OPS_12345"; 
 
-        /**
-         * =====================================================================
-         * NO TOCAR NADA POR DEBAJO DE ESTA LÍNEA
-         * =====================================================================
-         */
+        /** ===================================================================== */
 
         const ESTADOS_MAP = {
             "CONFIRMADA": { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800" },
@@ -296,6 +345,8 @@
 
         let lineChartInstance = null;
         let doughnutChartInstance = null;
+        let barHourChartInstance = null;
+        let barSizeChartInstance = null;
         
         let RAW_DATA = [];
         let ACTIVE_FILTER_START = null;
@@ -304,14 +355,20 @@
         let isFirstLoad = true;
         let lastReservationsCount = 0;
 
-        // Búsqueda en tiempo real
         document.getElementById('searchInput').addEventListener('input', applyFiltersAndRender);
 
-        // Verificación de PIN
-        function checkSecurity() {
-            if (PIN_ACCESO === "") return true; // Deshabilitado
-            if (sessionStorage.getItem('ops_pin_unlocked') === 'true') return true; // Ya desbloqueado
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        function checkSecurity() {
+            if (PIN_ACCESO === "") return true;
+            if (sessionStorage.getItem('ops_pin_unlocked') === 'true') return true;
             document.getElementById('pinOverlay').classList.remove('hidden');
             return false;
         }
@@ -321,14 +378,13 @@
             if (input === PIN_ACCESO) {
                 sessionStorage.setItem('ops_pin_unlocked', 'true');
                 document.getElementById('pinOverlay').classList.add('hidden');
-                if (RAW_DATA.length === 0) initDashboard(); // Cargar datos si no se había hecho
+                if (RAW_DATA.length === 0) initDashboard();
             } else {
                 document.getElementById('pinError').classList.remove('hidden');
                 setTimeout(() => document.getElementById('pinError').classList.add('hidden'), 3000);
             }
         }
 
-        // Dark Mode
         function toggleDarkMode() {
             const html = document.documentElement;
             if (html.classList.contains('dark')) {
@@ -338,17 +394,15 @@
                 html.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             }
-            if (RAW_DATA.length > 0) applyFiltersAndRender(); // Re-render charts
+            if (RAW_DATA.length > 0) applyFiltersAndRender();
         }
 
-        // Inicializar Dark Mode
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
 
-        // Alerta de audio
         function playAlertSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -367,23 +421,26 @@
             } catch (e) {}
         }
 
-        // Webhook Bidireccional
         async function updateRowStatus(fila, nombre, nuevoEstado) {
-            if (!WEBHOOK_UPDATE_URL) return; // Si no hay webhook, no hacer nada (no debería haber botón)
-            
+            if (!WEBHOOK_UPDATE_URL) return;
             const statusLabel = document.getElementById('webhookStatus');
             statusLabel.classList.remove('hidden');
             statusLabel.innerText = "Sincronizando...";
 
-            // Actualización local optimista
             const rowTarget = RAW_DATA.find(r => r._rowIndex === fila);
             if (rowTarget) {
                 rowTarget["Estado"] = nuevoEstado;
-                applyFiltersAndRender(); // Re-render rápido local
+                applyFiltersAndRender(); 
             }
 
             try {
-                const payload = { fila: fila, nombre: nombre, nuevo_estado: nuevoEstado, sheet_id: SHEET_ID };
+                const payload = { 
+                    fila: fila, 
+                    nombre: nombre, 
+                    nuevo_estado: nuevoEstado, 
+                    sheet_id: SHEET_ID,
+                    token: WEBHOOK_SECRET // <- INYECTANDO CAPA DE SEGURIDAD
+                };
                 await fetch(WEBHOOK_UPDATE_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -405,7 +462,7 @@
             }
             const cols = json.table.cols.map(c => c ? c.label : "");
             const data = json.table.rows.map((row, index) => {
-                let obj = { _rowIndex: index + 2 }; // La fila 1 es cabecera, así que index 0 = fila 2 de sheets
+                let obj = { _rowIndex: index + 2 };
                 row.c.forEach((cell, i) => {
                     if (cols[i]) {
                         obj[cols[i]] = cell ? (cell.f !== undefined ? cell.f : cell.v) : "";
@@ -415,23 +472,20 @@
             });
             
             RAW_DATA = data;
-            
             const validRows = data.filter(r => r["Fecha"] && r["Fecha"].trim() !== "");
             if (!isFirstLoad && validRows.length > lastReservationsCount) {
                 playAlertSound();
             }
             lastReservationsCount = validRows.length;
             isFirstLoad = false;
-
             applyFiltersAndRender();
             hideLoading();
         };
 
         function fetchData() {
-            if (!checkSecurity()) return; // No descargar datos si el PIN no está puesto
+            if (!checkSecurity()) return;
             const oldScript = document.getElementById('gvizScript');
             if (oldScript) oldScript.remove();
-
             const gvizUrl = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq?tqx=out:json;responseHandler:processGviz&t=" + new Date().getTime();
             const script = document.createElement('script');
             script.id = 'gvizScript';
@@ -441,10 +495,9 @@
         }
 
         async function initDashboard() {
-            updateDateHeader();
             if (NOMBRE_RESTAURANTE) {
                 document.getElementById('dashboardTitle').innerText = NOMBRE_RESTAURANTE;
-                document.title = NOMBRE_RESTAURANTE + " - Centro de Reservas";
+                document.title = NOMBRE_RESTAURANTE + " - V4";
             }
             const today = new Date();
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -461,13 +514,11 @@
             const fd = document.getElementById('filterDesde').value;
             const fh = document.getElementById('filterHasta').value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
             ACTIVE_FILTER_START = fd ? new Date(fd) : null;
             ACTIVE_FILTER_END = fh ? new Date(fh) : null;
 
             let filteredData = RAW_DATA.filter(row => row["Fecha"] && row["Fecha"].trim() !== "");
 
-            // Filtro de Texto (Buscador Vivo)
             if (searchTerm) {
                 filteredData = filteredData.filter(row => {
                     const nombre = (row["Nombre"] || "").toLowerCase();
@@ -476,33 +527,24 @@
                 });
             }
 
-            // Filtro de Fechas
             if (ACTIVE_FILTER_START || ACTIVE_FILTER_END) {
-                document.getElementById('kpiLabel').innerText = searchTerm ? "(Filtrado Búsqueda)" : "(En Rango)";
-                document.getElementById('tableLabel').innerText = "Aplicando filtros";
-                
+                document.getElementById('kpiLabel').innerText = searchTerm ? "(Búsqueda)" : "(Rango)";
+                document.getElementById('tableLabel').innerText = "Filtrado";
                 filteredData = filteredData.filter(row => {
                     const d = parseDateString(row["Fecha"]);
                     if (d.getTime() === 0) return false;
                     let valid = true;
-                    if (ACTIVE_FILTER_START) {
-                        const start = new Date(ACTIVE_FILTER_START);
-                        start.setHours(0,0,0,0);
-                        if (d < start) valid = false;
-                    }
-                    if (ACTIVE_FILTER_END) {
-                        const end = new Date(ACTIVE_FILTER_END);
-                        end.setHours(23,59,59,999);
-                        if (d > end) valid = false;
-                    }
+                    if (ACTIVE_FILTER_START) { const s = new Date(ACTIVE_FILTER_START); s.setHours(0,0,0,0); if (d < s) valid = false; }
+                    if (ACTIVE_FILTER_END) { const e = new Date(ACTIVE_FILTER_END); e.setHours(23,59,59,999); if (d > e) valid = false; }
                     return valid;
                 });
             } else {
-                document.getElementById('kpiLabel').innerText = searchTerm ? "(Filtrado Búsqueda)" : "(Histórico)";
-                document.getElementById('tableLabel').innerText = searchTerm ? "Resultados de búsqueda" : "Todas las fechas";
+                document.getElementById('kpiLabel').innerText = "(Histórico)";
+                document.getElementById('tableLabel').innerText = "Todo";
             }
 
             processData(filteredData);
+            processCRM(filteredData);
         }
 
         function clearFilters() {
@@ -514,55 +556,115 @@
 
         function processData(data) {
             const today = new Date();
-            let totalReservas = 0;
-            let totalComensales = 0;
-            let totalCanceladas = 0;
-            let serviciosHoy = 0;
-            const comensalesPorDia = {};
-            const estadosCount = {};
+            let totalReservas = 0, totalComensales = 0, totalCanceladas = 0, serviciosHoy = 0;
+            const comensalesPorDia = {}, estadosCount = {};
+            const hourCount = {}, sizeCount = {};
 
             data.forEach(row => {
                 const estadoRaw = (row["Estado"] || "Desconocido").trim().toUpperCase();
                 const pax = parseInt(row["Personas"]) || 0;
                 const rowDate = parseDateString(row["Fecha"]);
-
+                
                 totalReservas++;
                 totalComensales += pax;
+                if (estadoRaw === 'CANCELADA' || estadoRaw === 'NO-SHOW') totalCanceladas++;
+                if (rowDate.toDateString() === today.toDateString()) serviciosHoy++;
 
-                if (estadoRaw === 'CANCELADA' || estadoRaw === 'NO-SHOW') {
-                    totalCanceladas++;
-                }
-
-                if (rowDate.toDateString() === today.toDateString()) {
-                    serviciosHoy++;
-                }
-
+                // Para Line Chart (Por día)
                 const dateKey = `${rowDate.getFullYear()}-${String(rowDate.getMonth()+1).padStart(2, '0')}-${String(rowDate.getDate()).padStart(2, '0')}`;
                 if (!comensalesPorDia[dateKey]) comensalesPorDia[dateKey] = 0;
                 comensalesPorDia[dateKey] += pax;
 
+                // Para Doughnut
                 if (!estadosCount[estadoRaw]) estadosCount[estadoRaw] = 0;
                 estadosCount[estadoRaw]++;
+
+                // Para Analítica Horaria
+                if (estadoRaw !== 'CANCELADA' && estadoRaw !== 'NO-SHOW') {
+                    const hRaw = (row["Hora"] || "").trim().substring(0, 2);
+                    if (hRaw && !isNaN(hRaw)) {
+                        const hFormat = hRaw + ":00";
+                        if (!hourCount[hFormat]) hourCount[hFormat] = 0;
+                        hourCount[hFormat] += pax;
+                    }
+                    
+                    // Para Tamaño de Mesas
+                    const sKey = pax >= 8 ? "8+ Pax" : pax + " Pax";
+                    if (!sizeCount[sKey]) sizeCount[sKey] = 0;
+                    sizeCount[sKey]++;
+                }
             });
 
             const tasaCancelacion = totalReservas > 0 ? ((totalCanceladas / totalReservas) * 100).toFixed(1) : 0;
-
             document.getElementById('kpiMonthRes').innerText = totalReservas.toLocaleString();
             document.getElementById('kpiTotalPax').innerText = totalComensales.toLocaleString();
             document.getElementById('kpiCancelRate').innerText = `${tasaCancelacion}%`;
             document.getElementById('kpiTodayRes').innerText = serviciosHoy.toLocaleString();
 
-            renderCharts(comensalesPorDia, estadosCount);
+            renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount);
             renderTable(data);
         }
 
-        function renderCharts(comensalesPorDia, estadosCount) {
+        function processCRM(data) {
+            const clients = {};
+            data.forEach(row => {
+                const rawWa = (row["WhatsApp"] || "").trim();
+                const cleanWa = rawWa.replace(/\D/g, '');
+                if (!cleanWa) return;
+
+                const name = (row["Nombre"] || "Desconocido").trim();
+                const pax = parseInt(row["Personas"]) || 0;
+                const estado = (row["Estado"] || "").trim().toUpperCase();
+                const rDate = parseDateString(row["Fecha"]);
+
+                if (!clients[cleanWa]) {
+                    clients[cleanWa] = { nombre: name, tlfn: rawWa, visitas: 0, paxTotales: 0, fallos: 0, lastDate: new Date(0) };
+                }
+
+                clients[cleanWa].visitas++;
+                clients[cleanWa].paxTotales += pax;
+                if (estado === 'CANCELADA' || estado === 'NO-SHOW') clients[cleanWa].fallos++;
+                if (rDate > clients[cleanWa].lastDate) clients[cleanWa].lastDate = rDate;
+            });
+
+            const arr = Object.values(clients).sort((a, b) => b.visitas - a.visitas);
+            const tbody = document.getElementById('crmTableBody');
+            tbody.innerHTML = '';
+
+            arr.forEach((c, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-brand-bg dark:hover:bg-slate-800/50 transition-colors";
+                
+                let rankVisual = index + 1;
+                if (index === 0) rankVisual = "🥇 1";
+                if (index === 1) rankVisual = "🥈 2";
+                if (index === 2) rankVisual = "🥉 3";
+
+                const failRate = ((c.fallos / c.visitas) * 100).toFixed(0);
+                let failBadge = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">Fiable (0%)</span>`;
+                if (failRate > 0) failBadge = `<span class="text-amber-500 font-bold">${failRate}% Cancela</span>`;
+                if (failRate > 30) failBadge = `<span class="text-rose-500 font-bold">${failRate}% Riesgo</span>`;
+
+                tr.innerHTML = `
+                    <td class="px-4 py-4 font-extrabold text-brand-accent">${rankVisual}</td>
+                    <td class="px-4 py-4 font-bold">${c.nombre}</td>
+                    <td class="px-4 py-4 font-medium text-brand-accent">${c.tlfn}</td>
+                    <td class="px-4 py-4"><span class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-1 rounded-full font-bold text-xs">${c.visitas} reservas</span></td>
+                    <td class="px-4 py-4 font-bold text-emerald-600 dark:text-emerald-400">${c.paxTotales} pax</td>
+                    <td class="px-4 py-4">${failBadge}</td>
+                    <td class="px-4 py-4 text-xs text-brand-accent font-semibold">${c.lastDate.getTime() === 0 ? '-' : c.lastDate.toLocaleDateString('es-ES')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount) {
             const isDark = document.documentElement.classList.contains('dark');
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(148, 163, 184, 0.15)';
             const textColor = isDark ? '#94A3B8' : '#64748b';
             const tooltipBg = isDark ? '#1E293B' : '#0F172A';
-            const lineColor = isDark ? '#38BDF8' : '#0F172A';
 
+            // CHART 1: LINE
             const ctxLine = document.getElementById('lineChart').getContext('2d');
             const sortedDates = Object.keys(comensalesPorDia).sort((a, b) => new Date(a) - new Date(b)).slice(-14);
             const lineLabels = sortedDates.map(d => new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }));
@@ -575,29 +677,14 @@
             if (lineChartInstance) lineChartInstance.destroy();
             lineChartInstance = new Chart(ctxLine, {
                 type: 'line',
-                data: {
-                    labels: lineLabels,
-                    datasets: [{
-                        label: 'Comensales', data: lineData,
-                        borderColor: lineColor, backgroundColor: gradient, borderWidth: 3,
-                        pointBackgroundColor: isDark ? '#0F172A' : '#FFFFFF', pointBorderColor: lineColor,
-                        pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, fill: true, tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, padding: 12, cornerRadius: 8 } },
-                    scales: {
-                        y: { beginAtZero: true, border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } },
-                        x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor } }
-                    }
-                }
+                data: { labels: lineLabels, datasets: [{ label: 'Comensales', data: lineData, borderColor: isDark?'#38BDF8':'#0F172A', backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: isDark?'#0F172A':'#FFFFFF', pointBorderWidth: 2, fill: true, tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8 } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor } } } }
             });
 
+            // CHART 2: DOUGHNUT
             const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
             const dLabels = Object.keys(estadosCount);
             const dData = Object.values(estadosCount);
-
             const bgColors = dLabels.map(label => {
                 if(label === "CONFIRMADA") return '#10b981';
                 if(label === "SENTADO") return '#3b82f6';
@@ -606,18 +693,33 @@
                 if(label === "PENDIENTE") return '#f59e0b';
                 return '#94A3B8';
             });
-
             if (doughnutChartInstance) doughnutChartInstance.destroy();
             doughnutChartInstance = new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: { labels: dLabels, datasets: [{ data: dData, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 6 }] },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '75%',
-                    plugins: {
-                        legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle', color: textColor, font: { family: 'Inter', size: 12 } } },
-                        tooltip: { backgroundColor: tooltipBg, padding: 12, cornerRadius: 8 }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, color: textColor } }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8 } } }
+            });
+
+            // CHART 3: BAR (HORAS)
+            const ctxHour = document.getElementById('barHourChart').getContext('2d');
+            const hKeys = Object.keys(hourCount).sort();
+            const hData = hKeys.map(k => hourCount[k]);
+            if (barHourChartInstance) barHourChartInstance.destroy();
+            barHourChartInstance = new Chart(ctxHour, {
+                type: 'bar',
+                data: { labels: hKeys, datasets: [{ label: 'Pax por Hora', data: hData, backgroundColor: isDark?'rgba(56, 189, 248, 0.8)':'rgba(15, 23, 42, 0.8)', borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg } }, scales: { y: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, x: { grid: { display: false }, ticks: { color: textColor } } } }
+            });
+
+            // CHART 4: BAR (SIZE)
+            const ctxSize = document.getElementById('barSizeChart').getContext('2d');
+            const sKeys = Object.keys(sizeCount).sort();
+            const sData = sKeys.map(k => sizeCount[k]);
+            if (barSizeChartInstance) barSizeChartInstance.destroy();
+            barSizeChartInstance = new Chart(ctxSize, {
+                type: 'bar',
+                data: { labels: sKeys, datasets: [{ label: 'Mesas', data: sData, backgroundColor: '#10b981', borderRadius: 4 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg } }, scales: { x: { border: { display: false }, grid: { color: gridColor }, ticks: { color: textColor } }, y: { grid: { display: false }, ticks: { color: textColor } } } }
             });
         }
 
@@ -625,12 +727,7 @@
             const tbody = document.getElementById('tableBody');
             const emptyMsg = document.getElementById('emptyTableMessage');
             tbody.innerHTML = '';
-
-            if(data.length === 0) {
-                emptyMsg.classList.remove('hidden'); return;
-            } else {
-                emptyMsg.classList.add('hidden');
-            }
+            if(data.length === 0) { emptyMsg.classList.remove('hidden'); return; } else { emptyMsg.classList.add('hidden'); }
 
             const sorted = data.sort((a, b) => {
                 const dA = parseDateString(a["Fecha"]);
@@ -645,50 +742,28 @@
                 const nombre = row["Nombre"] ? row["Nombre"].trim() : "Cliente";
                 const rowIndex = row._rowIndex;
                 
-                // Formato WhatsApp
                 const waRaw = row["WhatsApp"] ? row["WhatsApp"].trim() : "";
                 const waNum = waRaw.replace(/\D/g, '');
                 let waHtml = `<span class="text-brand-accent text-xs">-</span>`;
-                
                 if (waNum.length >= 8) {
                     const waFinal = waNum.startsWith("34") ? waNum : "34" + waNum;
-                    waHtml = `
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium">${waRaw}</span>
-                            <a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a>
-                        </div>
-                    `;
+                    waHtml = `<div class="flex items-center gap-2"><span class="font-medium">${waRaw}</span><a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a></div>`;
                 }
 
-                // Generar Botones Webhook si está configurado
                 let statusHtml = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>`;
-                
                 if (WEBHOOK_UPDATE_URL) {
-                    statusHtml = `
-                        <div class="flex flex-col gap-2">
-                            ${statusHtml}
-                            <div class="flex items-center gap-1 no-print">
-                                <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2 py-1 text-[9px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded border border-blue-200 dark:border-blue-800 transition-colors">SENTAR</button>
-                                <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2 py-1 text-[9px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded border border-rose-200 dark:border-rose-800 transition-colors">NO-SHOW</button>
-                            </div>
-                        </div>
-                    `;
+                    statusHtml = `<div class="flex flex-col gap-2">${statusHtml}<div class="flex items-center gap-1 no-print">
+                        <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2 py-1 text-[9px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded border border-blue-200 dark:border-blue-800 transition-colors">SENTAR</button>
+                        <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2 py-1 text-[9px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded border border-rose-200 dark:border-rose-800 transition-colors">NO-SHOW</button>
+                    </div></div>`;
                 }
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-brand-bg dark:hover:bg-slate-800/50 transition-colors";
-                
                 tr.innerHTML = `
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        <div class="font-bold mb-0.5">${row["Fecha"]}</div>
-                        <div class="text-xs text-brand-accent font-semibold">${row["Hora"] || '--:--'}</div>
-                    </td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap"><div class="font-bold mb-0.5">${row["Fecha"]}</div><div class="text-xs text-brand-accent font-semibold">${row["Hora"] || '--:--'}</div></td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap font-semibold">${nombre}</td>
-                    <td class="px-4 md:px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold">${row["Personas"] || 0}</span>
-                        </div>
-                    </td>
+                    <td class="px-4 md:px-6 py-4 whitespace-nowrap"><div class="flex items-center gap-2"><span class="font-bold">${row["Personas"] || 0}</span></div></td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">${waHtml}</td>
                     <td class="px-4 md:px-6 py-4 whitespace-nowrap">${statusHtml}</td>
                 `;
@@ -698,26 +773,16 @@
 
         function parseDateString(dateStr) {
             if(!dateStr) return new Date(0);
-            if(dateStr.includes('/')) {
-                const p = dateStr.split('/');
-                if(p.length === 3) return new Date(p[2], p[1]-1, p[0]);
-            }
+            if(dateStr.includes('/')) { const p = dateStr.split('/'); if(p.length === 3) return new Date(p[2], p[1]-1, p[0]); }
             const d = new Date(dateStr);
             return isNaN(d.getTime()) ? new Date(0) : d;
-        }
-
-        function updateDateHeader() {
-            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         }
 
         function hideLoading() {
             const loader = document.getElementById('loadingOverlay');
             if (loader) {
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                    document.getElementById('dashboardContent').classList.remove('hidden');
-                }, 500);
+                setTimeout(() => { loader.classList.add('hidden'); document.getElementById('dashboardContent').classList.remove('hidden'); }, 500);
             }
         }
         function showError(msg) {
