@@ -324,9 +324,11 @@
          * =====================================================================
          */
         const NOMBRE_RESTAURANTE = "Ops Dining";
-        const SHEET_ID = "12qHrqtzJMMRMc7ziKJVPbTjJiQY7rCOA9mZ4u28y3ZE";
+        const DB_NAME = "Gestion_OpsDining";
+        const DB_TABLE = "Reservas_OpsDining";
         const PIN_ACCESO = ""; 
-        const WEBHOOK_UPDATE_URL = "https://n8n.opsdining.com/webhook-test/update-estado";
+        const WEBHOOK_READ_URL = "https://n8n.opsdining.com/webhook/read-postgres"; // Cambia esta URL
+        const WEBHOOK_UPDATE_URL = "https://n8n.opsdining.com/webhook/update-postgres"; // Cambia esta URL
         
         // 🔒 TOKEN DE SEGURIDAD (Evita ataques falsificando datos hacia n8n)
         const WEBHOOK_SECRET = "OPS_12345"; 
@@ -421,13 +423,13 @@
             } catch (e) {}
         }
 
-        async function updateRowStatus(fila, nombre, nuevoEstado) {
+        async function updateRowStatus(id, nombre, nuevoEstado) {
             if (!WEBHOOK_UPDATE_URL) return;
             const statusLabel = document.getElementById('webhookStatus');
             statusLabel.classList.remove('hidden');
             statusLabel.innerText = "Sincronizando...";
 
-            const rowTarget = RAW_DATA.find(r => r._rowIndex === fila);
+            const rowTarget = RAW_DATA.find(r => r.id === id);
             if (rowTarget) {
                 rowTarget["Estado"] = nuevoEstado;
                 applyFiltersAndRender(); 
@@ -435,11 +437,13 @@
 
             try {
                 const payload = { 
-                    fila: fila, 
+                    action: "update",
+                    db_name: DB_NAME,
+                    table_name: DB_TABLE,
+                    id: id, 
                     nombre: nombre, 
                     nuevo_estado: nuevoEstado, 
-                    sheet_id: SHEET_ID,
-                    token: WEBHOOK_SECRET // <- INYECTANDO CAPA DE SEGURIDAD
+                    token: WEBHOOK_SECRET
                 };
                 await fetch(WEBHOOK_UPDATE_URL, {
                     method: 'POST',
@@ -455,43 +459,36 @@
             }
         }
 
-        window.processGviz = function(json) {
-            if (!json || !json.table || !json.table.rows) {
-                showError("Error leyendo datos del JSONP.");
+        async function fetchData() {
+            if (!checkSecurity()) return;
+            if (!WEBHOOK_READ_URL) {
+                showError("Falta configurar la URL de Lectura (Postgres).");
                 return;
             }
-            const cols = json.table.cols.map(c => c ? c.label : "");
-            const data = json.table.rows.map((row, index) => {
-                let obj = { _rowIndex: index + 2 };
-                row.c.forEach((cell, i) => {
-                    if (cols[i]) {
-                        obj[cols[i]] = cell ? (cell.f !== undefined ? cell.f : cell.v) : "";
-                    }
+            try {
+                const payload = { action: "read", db_name: DB_NAME, table_name: DB_TABLE, token: WEBHOOK_SECRET };
+                const response = await fetch(WEBHOOK_READ_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-                return obj;
-            });
-            
-            RAW_DATA = data;
-            const validRows = data.filter(r => r["Fecha"] && r["Fecha"].trim() !== "");
-            if (!isFirstLoad && validRows.length > lastReservationsCount) {
-                playAlertSound();
+                
+                if (!response.ok) throw new Error("Error en red");
+                const data = await response.json();
+                
+                RAW_DATA = data;
+                const validRows = data.filter(r => r["Fecha"] && r["Fecha"].trim() !== "");
+                if (!isFirstLoad && validRows.length > lastReservationsCount) {
+                    playAlertSound();
+                }
+                lastReservationsCount = validRows.length;
+                isFirstLoad = false;
+                applyFiltersAndRender();
+                hideLoading();
+            } catch (e) {
+                console.error("Fallo sincro fondo", e);
+                showError("No se pudo conectar con Postgres a través de n8n.");
             }
-            lastReservationsCount = validRows.length;
-            isFirstLoad = false;
-            applyFiltersAndRender();
-            hideLoading();
-        };
-
-        function fetchData() {
-            if (!checkSecurity()) return;
-            const oldScript = document.getElementById('gvizScript');
-            if (oldScript) oldScript.remove();
-            const gvizUrl = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq?tqx=out:json;responseHandler:processGviz&t=" + new Date().getTime();
-            const script = document.createElement('script');
-            script.id = 'gvizScript';
-            script.src = gvizUrl;
-            script.onerror = () => console.error("Fallo sincro fondo");
-            document.body.appendChild(script);
         }
 
         async function initDashboard() {
@@ -789,12 +786,11 @@
                 }
 
                 let statusHtml = `<div class="flex items-center justify-center w-full"><span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span></div>`;
-                if (WEBHOOK_UPDATE_URL) {
+                if (WEBHOOK_UPDATE_URL && estadoRaw === "CONFIRMADA") {
                     statusHtml = `<div class="flex flex-col items-center justify-center gap-2.5 w-full">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>
                         <div class="flex justify-center gap-1.5 no-print">
-                            <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'SENTADO')" class="px-2.5 py-1.5 text-[10px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 dark:text-blue-400 rounded-lg border border-blue-200 dark:border-blue-800 transition-all hover:scale-105 active:scale-95 shadow-sm">SENTAR</button>
-                            <button onclick="updateRowStatus(${rowIndex}, '${nombre.replace(/'/g, "\\'")}', 'NO-SHOW')" class="px-2.5 py-1.5 text-[10px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:hover:bg-rose-800/50 dark:text-rose-400 rounded-lg border border-rose-200 dark:border-rose-800 transition-all hover:scale-105 active:scale-95 shadow-sm">NO-SHOW</button>
+                            <button onclick="updateRowStatus(${row.id}, '${nombre.replace(/'/g, "\\'")}', 'FINALIZADA')" class="px-3 py-1.5 text-[10px] font-extrabold bg-yellow-50 hover:bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/50 dark:text-yellow-400 rounded-lg border border-yellow-300 dark:border-yellow-700 transition-all hover:scale-105 active:scale-95 shadow-sm">FINALIZADA</button>
                         </div>
                     </div>`;
                 }
