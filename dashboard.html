@@ -306,11 +306,11 @@
                     <div class="relative h-[300px] w-full"><canvas id="barHourChart"></canvas></div>
                 </div>
 
-                <!-- Tamaño de Mesas -->
+                <!-- Afluencia por Día -->
                 <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
-                    <h3 class="text-base font-bold mb-1">Distribución de Mesas (Comensales)</h3>
-                    <p class="text-xs text-brand-accent mb-6">Descubre si predominan parejas, mesas de 4 o grupos grandes.</p>
-                    <div class="relative h-[300px] w-full"><canvas id="barSizeChart"></canvas></div>
+                    <h3 class="text-base font-bold mb-1">Afluencia por Día de la Semana</h3>
+                    <p class="text-xs text-brand-accent mb-6">Descubre qué días de la semana atraen más comensales.</p>
+                    <div class="relative h-[300px] w-full"><canvas id="barDayChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -349,6 +349,7 @@
         let doughnutChartInstance = null;
         let barHourChartInstance = null;
         let barSizeChartInstance = null;
+        let barDayChartInstance = null;
         
         let RAW_DATA = [];
         let ACTIVE_FILTER_START = null;
@@ -552,8 +553,9 @@
         function processData(data) {
             const today = new Date();
             let totalReservas = 0, totalComensales = 0, totalCanceladas = 0, serviciosHoy = 0;
+            const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             const comensalesPorDia = {}, estadosCount = {};
-            const hourCount = {}, sizeCount = {};
+            const hourCount = {}, sizeCount = {}, dayCount = {};
 
             data.forEach(row => {
                 const estadoRaw = (row["Estado"] || "Desconocido").trim().toUpperCase();
@@ -574,8 +576,8 @@
                 if (!estadosCount[estadoRaw]) estadosCount[estadoRaw] = 0;
                 estadosCount[estadoRaw]++;
 
-                // Para Analítica Horaria
                 if (estadoRaw !== 'CANCELADA' && estadoRaw !== 'NO-SHOW') {
+                    // Para Analítica Horaria
                     const hRaw = (row["Hora"] || "").trim().substring(0, 2);
                     if (hRaw && !isNaN(hRaw)) {
                         const hFormat = hRaw + ":00";
@@ -587,6 +589,13 @@
                     const sKey = pax >= 8 ? "8+ Pers." : pax + " Pers.";
                     if (!sizeCount[sKey]) sizeCount[sKey] = 0;
                     sizeCount[sKey]++;
+
+                    // Para Día de la Semana
+                    if (rowDate.getTime() !== 0) {
+                        const dName = dayNames[rowDate.getDay()];
+                        if (!dayCount[dName]) dayCount[dName] = 0;
+                        dayCount[dName] += pax;
+                    }
                 }
             });
 
@@ -596,7 +605,7 @@
             document.getElementById('kpiCancelRate').innerText = `${tasaCancelacion}%`;
             document.getElementById('kpiTodayRes').innerText = serviciosHoy.toLocaleString();
 
-            renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount);
+            renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount, dayCount);
             renderTable(data);
         }
 
@@ -665,7 +674,7 @@
             });
         }
 
-        function renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount) {
+        function renderCharts(comensalesPorDia, estadosCount, hourCount, sizeCount, dayCount) {
             const isDark = document.documentElement.classList.contains('dark');
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(148, 163, 184, 0.15)';
             const textColor = isDark ? '#94A3B8' : '#64748b';
@@ -681,7 +690,7 @@
             gradient.addColorStop(0, isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(15, 23, 42, 0.15)');
             gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-            if (lineChartInstance) lineChartInstance.destroy();
+            // (Removed local let declarations to use global variables)
             lineChartInstance = new Chart(ctxLine, {
                 type: 'line',
                 data: { labels: lineLabels, datasets: [{ label: 'Comensales', data: lineData, borderColor: isDark?'#38BDF8':'#0F172A', backgroundColor: gradient, borderWidth: 4, pointBackgroundColor: isDark?'#0F172A':'#FFFFFF', pointBorderWidth: 3, pointRadius: 5, fill: true, tension: 0.5 }] },
@@ -764,6 +773,24 @@
                 type: 'bar',
                 data: { labels: sKeys, datasets: [{ label: 'Mesas', data: sData, backgroundColor: gradientSize, borderRadius: 8, barPercentage: 0.5, borderSkipped: false }] },
                 options: { layout: { padding: { right: 30 } }, indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } }, scales: { x: { display: false, grid: { display: false } }, y: { grid: { display: false }, border: { display: false }, ticks: { color: textColor, font: { family: 'Outfit', size: 13, weight: '600' } } } } },
+                plugins: [dataLabelsPlugin]
+            });
+
+            // CHART 5: BAR (DAYS)
+            const ctxDay = document.getElementById('barDayChart').getContext('2d');
+            const orderedDays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+            const validDays = orderedDays.filter(d => dayCount[d] > 0);
+            const dayData = validDays.map(d => dayCount[d]);
+
+            const gradientDay = ctxDay.createLinearGradient(0, 0, 0, 400);
+            gradientDay.addColorStop(0, isDark ? '#F43F5E' : '#E11D48');
+            gradientDay.addColorStop(1, isDark ? 'rgba(244, 63, 94, 0.2)' : 'rgba(225, 29, 72, 0.3)');
+
+            if (barDayChartInstance) barDayChartInstance.destroy();
+            barDayChartInstance = new Chart(ctxDay, {
+                type: 'bar',
+                data: { labels: validDays, datasets: [{ label: 'Comensales', data: dayData, backgroundColor: gradientDay, borderRadius: 8, barPercentage: 0.5, borderSkipped: false }] },
+                options: { layout: { padding: { top: 20 } }, responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: tooltipBg, cornerRadius: 8, padding: 12, titleFont: { family: 'Outfit', size: 14 }, bodyFont: { family: 'Outfit', size: 14 } } }, scales: { y: { display: false, grid: { display: false } }, x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor, font: { family: 'Outfit', size: 13, weight: '600' } } } } },
                 plugins: [dataLabelsPlugin]
             });
         }
