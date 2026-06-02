@@ -474,9 +474,13 @@
                     body: JSON.stringify(payload)
                 });
                 
-                if (!response.ok) throw new Error("Error en red");
+                if (!response.ok) throw new Error("Status " + response.status);
                 const data = await response.json();
                 
+                if (!Array.isArray(data)) {
+                    throw new Error("n8n no devolvió una lista. Respuesta: " + JSON.stringify(data).substring(0, 60));
+                }
+
                 RAW_DATA = data;
                 const validRows = data.filter(r => r["Fecha"] && r["Fecha"].trim() !== "");
                 if (!isFirstLoad && validRows.length > lastReservationsCount) {
@@ -488,7 +492,7 @@
                 hideLoading();
             } catch (e) {
                 console.error("Fallo sincro fondo", e);
-                showError("No se pudo conectar con Postgres a través de n8n.");
+                showError("Error de Conexión: " + e.message);
             }
         }
 
