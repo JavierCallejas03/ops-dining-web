@@ -137,7 +137,7 @@
                     <!-- Buscador -->
                     <div class="relative w-full sm:w-auto">
                         <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" id="searchInput" placeholder="Buscar cliente o tfno..." class="w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-lg outline-none focus:border-brand-dark dark:focus:border-brand-accent text-brand-dark dark:text-white transition-colors">
+                        <input type="text" id="searchInput" placeholder="Buscar cliente o teléfono..." class="w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm bg-white dark:bg-slate-800 border border-brand-accent/30 rounded-lg outline-none focus:border-brand-dark dark:focus:border-brand-accent text-brand-dark dark:text-white transition-colors">
                     </div>
 
                     <!-- Filtros Fecha -->
@@ -183,11 +183,11 @@
             <button onclick="switchTab('tab-operativa')" id="btn-tab-operativa" class="tab-btn active px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
                 1. Control Operativo
             </button>
-            <button onclick="switchTab('tab-crm')" id="btn-tab-crm" class="tab-btn px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
-                2. CRM Clientes VIP
-            </button>
             <button onclick="switchTab('tab-analytics')" id="btn-tab-analytics" class="tab-btn px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
-                3. Analítica Avanzada
+                2. Analítica Avanzada
+            </button>
+            <button onclick="switchTab('tab-crm')" id="btn-tab-crm" class="tab-btn px-6 py-3 text-sm font-semibold text-brand-accent hover:text-brand-dark dark:hover:text-white whitespace-nowrap transition-colors">
+                3. Clientes Frecuentes
             </button>
         </nav>
 
@@ -197,14 +197,15 @@
         <div id="tab-operativa" class="tab-content fade-in">
             <!-- KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 break-avoid">
-                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
-                    <h3 class="text-sm font-bold text-brand-accent">Total Reservas <span id="kpiLabel">(Filtrado)</span></h3>
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 dark:bg-white/5 rounded-bl-[100%] no-print"></div>
+                    <h3 class="text-sm font-bold">Servicios para Hoy</h3>
                     <div class="mt-4 flex items-baseline gap-2">
-                        <p class="text-4xl font-extrabold tracking-tight" id="kpiMonthRes">0</p>
-                        <span class="text-xs text-brand-accent font-semibold">registros</span>
+                        <p class="text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="kpiTodayRes">0</p>
+                        <span class="text-xs text-brand-accent font-semibold">hoy</span>
                     </div>
                 </div>
-                
+
                 <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
                     <h3 class="text-sm font-bold text-brand-accent">Volumen de Comensales</h3>
                     <div class="mt-4 flex items-baseline gap-2">
@@ -220,26 +221,13 @@
                         <span class="text-xs text-brand-accent font-semibold">sobre reservas</span>
                     </div>
                 </div>
-                
-                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border relative overflow-hidden">
-                    <div class="absolute right-0 top-0 w-16 h-16 bg-brand-dark/5 dark:bg-white/5 rounded-bl-[100%] no-print"></div>
-                    <h3 class="text-sm font-bold">Servicios para Hoy</h3>
-                    <div class="mt-4 flex items-baseline gap-2">
-                        <p class="text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="kpiTodayRes">0</p>
-                        <span class="text-xs text-brand-accent font-semibold">hoy</span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Charts Section (Hidden in print) -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 no-print break-avoid">
-                <div class="lg:col-span-2 bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
-                    <h3 class="text-base font-bold mb-4">Evolución Diaria (Comensales)</h3>
-                    <div class="relative h-[250px] w-full"><canvas id="lineChart"></canvas></div>
-                </div>
-                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
-                    <h3 class="text-base font-bold mb-4">Distribución Operativa</h3>
-                    <div class="relative flex-1 w-full min-h-[200px] flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm print-border">
+                    <h3 class="text-sm font-bold text-brand-accent">Total Reservas</h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <p class="text-4xl font-extrabold tracking-tight" id="kpiMonthRes">0</p>
+                        <span class="text-xs text-brand-accent font-semibold">registros</span>
+                    </div>
                 </div>
             </div>
 
@@ -295,10 +283,22 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- TAB 3: ANALYTICS -->
+        <!-- TAB 2: ANALYTICS -->
         <!-- ============================================== -->
         <div id="tab-analytics" class="tab-content hidden fade-in">
+            <!-- Picos y Mesas -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Evolución Diaria (Moved from Tab 1) -->
+                <div class="md:col-span-2 bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-base font-bold mb-4">Evolución Diaria (Comensales)</h3>
+                    <div class="relative h-[250px] w-full"><canvas id="lineChart"></canvas></div>
+                </div>
+                
+                <!-- Distribución Operativa (Moved from Tab 1) -->
+                <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm flex flex-col">
+                    <h3 class="text-base font-bold mb-4">Distribución Operativa</h3>
+                    <div class="relative flex-1 w-full min-h-[200px] flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
+                </div>
                 <!-- Picos de Afluencia -->
                 <div class="bg-white dark:bg-slate-800 border border-brand-accent/20 rounded-2xl p-6 shadow-sm">
                     <h3 class="text-base font-bold mb-1">Picos de Afluencia Horaria</h3>
@@ -525,7 +525,6 @@
             }
 
             if (ACTIVE_FILTER_START || ACTIVE_FILTER_END) {
-                document.getElementById('kpiLabel').innerText = searchTerm ? "(Búsqueda)" : "(Rango)";
                 document.getElementById('tableLabel').innerText = "Filtrado";
                 filteredData = filteredData.filter(row => {
                     const d = parseDateString(row["Fecha"]);
@@ -536,7 +535,6 @@
                     return valid;
                 });
             } else {
-                document.getElementById('kpiLabel').innerText = "(Histórico)";
                 document.getElementById('tableLabel').innerText = "Todo";
             }
 
@@ -602,6 +600,18 @@
             renderTable(data);
         }
 
+        function formatPhone(phone) {
+            let clean = phone.replace(/\D/g, '');
+            if (clean.length === 9) {
+                return `+34 ${clean.substring(0,3)} ${clean.substring(3,6)} ${clean.substring(6)}`;
+            } else if (clean.startsWith('34') && clean.length === 11) {
+                return `+34 ${clean.substring(2,5)} ${clean.substring(5,8)} ${clean.substring(8)}`;
+            } else if (clean.length > 0) {
+                return "+" + clean;
+            }
+            return phone;
+        }
+
         function processCRM(data) {
             const clients = {};
             data.forEach(row => {
@@ -645,7 +655,7 @@
                 tr.innerHTML = `
                     <td class="px-4 py-4 font-extrabold text-brand-accent">${rankVisual}</td>
                     <td class="px-4 py-4 font-bold">${c.nombre}</td>
-                    <td class="px-4 py-4 font-medium text-brand-accent">${c.tlfn}</td>
+                    <td class="px-4 py-4 font-medium text-brand-accent">${formatPhone(c.tlfn)}</td>
                     <td class="px-4 py-4"><span class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-1 rounded-full font-bold text-xs">${c.visitas} reservas</span></td>
                     <td class="px-4 py-4 font-bold text-emerald-600 dark:text-emerald-400">${c.paxTotales} pers.</td>
                     <td class="px-4 py-4">${failBadge}</td>
@@ -782,7 +792,7 @@
                 let waHtml = `<span class="text-brand-accent text-xs">-</span>`;
                 if (waNum.length >= 8) {
                     const waFinal = waNum.startsWith("34") ? waNum : "34" + waNum;
-                    waHtml = `<div class="flex items-center gap-2"><span class="font-medium">${waRaw}</span><a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a></div>`;
+                    waHtml = `<div class="flex items-center gap-2"><span class="font-medium whitespace-nowrap">${formatPhone(waRaw)}</span><a href="https://wa.me/${waFinal}" target="_blank" class="no-print inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366]/20 px-2 py-1 rounded transition-colors font-bold text-[10px] uppercase border border-[#25D366]/20">WA</a></div>`;
                 }
 
                 let statusHtml = `<div class="flex items-center justify-center w-full"><span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span></div>`;
