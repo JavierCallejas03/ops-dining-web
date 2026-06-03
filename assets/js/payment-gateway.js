@@ -73,6 +73,39 @@ const PLANS = {
             'Soporte 24/7 dedicado',
         ],
     },
+    mantenimiento_eco: {
+        id: 'mantenimiento_eco',
+        name: 'Mantenimiento Económico',
+        subtitle: 'Soporte mensual básico',
+        price: 500,
+        features: [
+            'Mantenimiento de IA básico',
+            'Monitorización de sistema',
+            'Soporte por email',
+        ],
+    },
+    mantenimiento_medio: {
+        id: 'mantenimiento_medio',
+        name: 'Mantenimiento Medio',
+        subtitle: 'Soporte y actualizaciones',
+        price: 1000,
+        features: [
+            'Mantenimiento de IA avanzado',
+            'Optimización mensual',
+            'Soporte prioritario',
+        ],
+    },
+    mantenimiento_premium: {
+        id: 'mantenimiento_premium',
+        name: 'Mantenimiento Premium',
+        subtitle: 'Servicio integral 360',
+        price: 1500,
+        features: [
+            'Todo incluido (IA, flujos, bots)',
+            'Auditoría y mejoras continuas',
+            'Soporte 24/7 dedicado',
+        ],
+    },
 };
 
 // Discounts — prepared for future use

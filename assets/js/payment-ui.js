@@ -112,6 +112,9 @@
             basico: 'from-slate-500 to-slate-600',
             core: 'from-amber-600 to-yellow-500',
             high: 'from-purple-600 to-pink-500',
+            mantenimiento_eco: 'from-emerald-500 to-teal-400',
+            mantenimiento_medio: 'from-blue-600 to-cyan-500',
+            mantenimiento_premium: 'from-indigo-600 to-violet-500',
         };
         badge.className = `inline-block px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.25em] bg-gradient-to-r ${colors[currentPlan] || colors.core} text-white`;
     }
