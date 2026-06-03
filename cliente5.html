@@ -702,7 +702,7 @@
             gradient.addColorStop(0, isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(15, 23, 42, 0.15)');
             gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-            // (Removed local let declarations to use global variables)
+            if (lineChartInstance) lineChartInstance.destroy();
             lineChartInstance = new Chart(ctxLine, {
                 type: 'line',
                 data: { labels: lineLabels, datasets: [{ label: 'Comensales', data: lineData, borderColor: isDark?'#38BDF8':'#0F172A', backgroundColor: gradient, borderWidth: 4, pointBackgroundColor: isDark?'#0F172A':'#FFFFFF', pointBorderWidth: 3, pointRadius: 5, fill: true, tension: 0.5 }] },
