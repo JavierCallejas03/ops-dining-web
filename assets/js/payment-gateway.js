@@ -75,7 +75,7 @@ const PLANS = {
     },
     mantenimiento_eco: {
         id: 'mantenimiento_eco',
-        name: 'Mantenimiento Económico',
+        name: 'Mantenimiento Recepcionista Virtual 24/7',
         subtitle: 'Soporte mensual básico',
         price: 500,
         features: [
@@ -86,7 +86,7 @@ const PLANS = {
     },
     mantenimiento_medio: {
         id: 'mantenimiento_medio',
-        name: 'Mantenimiento Medio',
+        name: 'Mantenimiento Guardián de Reservas',
         subtitle: 'Soporte y actualizaciones',
         price: 1000,
         features: [
@@ -97,7 +97,7 @@ const PLANS = {
     },
     mantenimiento_premium: {
         id: 'mantenimiento_premium',
-        name: 'Mantenimiento Premium',
+        name: 'Mantenimiento Escudo Telefónico',
         subtitle: 'Servicio integral 360',
         price: 1500,
         features: [
