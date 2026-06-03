@@ -330,6 +330,9 @@ function calculatePricing(plan, discountCode) {
     const iva = baseAfterDiscount * IVA_RATE;
     const total = baseAfterDiscount + iva;
 
+    const isMonthly = plan.startsWith('mantenimiento_');
+    const suffix = isMonthly ? ' / mes' : '';
+
     return {
         plan: planData,
         subtotal,
@@ -343,7 +346,7 @@ function calculatePricing(plan, discountCode) {
             discount: formatEUR(discountAmount),
             base: formatEUR(baseAfterDiscount),
             iva: formatEUR(iva),
-            total: formatEUR(total),
+            total: formatEUR(total) + suffix,
         },
     };
 }
