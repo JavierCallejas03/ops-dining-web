@@ -432,13 +432,13 @@
             } catch (e) {}
         }
 
-        async function updateRowStatus(id, nombre, nuevoEstado) {
+        async function updateRowStatus(fecha, hora, nombre, nuevoEstado) {
             if (!WEBHOOK_UPDATE_URL) return;
             const statusLabel = document.getElementById('webhookStatus');
             statusLabel.classList.remove('hidden');
             statusLabel.innerText = "Sincronizando...";
 
-            const rowTarget = RAW_DATA.find(r => r.id === id);
+            const rowTarget = RAW_DATA.find(r => r["Fecha"] === fecha && r["Hora"] === hora && r["Nombre"] === nombre);
             if (rowTarget) {
                 rowTarget["Estado"] = nuevoEstado;
                 applyFiltersAndRender(); 
@@ -449,7 +449,8 @@
                     action: "update",
                     db_name: DB_NAME,
                     table_name: DB_TABLE,
-                    id: id, 
+                    fecha: fecha,
+                    hora: hora,
                     nombre: nombre, 
                     nuevo_estado: nuevoEstado, 
                     token: WEBHOOK_SECRET
@@ -839,7 +840,7 @@
                     statusHtml = `<div class="flex flex-col items-center justify-center gap-2.5 w-full">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase border ${estadoObj.bg} ${estadoObj.text} ${estadoObj.border}">${estadoRaw}</span>
                         <div class="flex justify-center gap-1.5 no-print">
-                            <button onclick="updateRowStatus(${row.id}, '${nombre.replace(/'/g, "\\'")}', 'FINALIZADA')" class="px-3 py-1.5 text-[10px] font-extrabold bg-yellow-50 hover:bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/50 dark:text-yellow-400 rounded-lg border border-yellow-300 dark:border-yellow-700 transition-all hover:scale-105 active:scale-95 shadow-sm">FINALIZADA</button>
+                            <button onclick="updateRowStatus('${row["Fecha"]}', '${row["Hora"]}', '${nombre.replace(/'/g, "\\'")}', 'FINALIZADA')" class="px-3 py-1.5 text-[10px] font-extrabold bg-yellow-50 hover:bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/50 dark:text-yellow-400 rounded-lg border border-yellow-300 dark:border-yellow-700 transition-all hover:scale-105 active:scale-95 shadow-sm">FINALIZADA</button>
                         </div>
                     </div>`;
                 }
